@@ -4,7 +4,7 @@ body {
     background: #f2f6e9;
 }
 
-/*--- header ---*/
+/*--- Full-Screen ---*/
 
 .full-screen {
     background-image: url('../images/bg.jpg');
@@ -28,6 +28,12 @@ body {
     flex: 1 1 auto;
 }
 
+/*--- Player Site ---*/
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
 
 /*--- navigation bar ---*/
 
