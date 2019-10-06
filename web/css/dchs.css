@@ -4,6 +4,7 @@ body {
     background: #f2f6e9;
 }
 
+
 /*--- Full-Screen ---*/
 
 .full-screen {
@@ -28,12 +29,20 @@ body {
     flex: 1 1 auto;
 }
 
+.jumbotron {
+    height: 65vh;
+    background: rgba(204, 204, 204, 0.5);
+}
+
+
 /*--- Player Site ---*/
+
 .vcenter {
     display: inline-block;
     vertical-align: middle;
     float: none;
 }
+
 
 /*--- navigation bar ---*/
 
@@ -81,6 +90,7 @@ body {
     line-height: 1.5;
 }
 
+
 /*--- General Settings ---*/
 
 .btn {
@@ -99,4 +109,3 @@ button:hover {
 .menutitle {
     font-size: 10em;
 }
-
