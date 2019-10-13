@@ -41,7 +41,8 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var player Player
 	json.NewDecoder(r.Body).Decode(&player)
-	fmt.Println(player.Name, player.Points)
+	fmt.Println(player.Name)
+	player.Points = 501
 	player.ID = "5"
 	players = append(players, player)
 	json.NewEncoder(w).Encode(&player)

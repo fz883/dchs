@@ -43,6 +43,10 @@ body {
     float: none;
 }
 
+#spielerbutton {
+    margin-top: 40px;
+}
+
 
 /*--- navigation bar ---*/
 

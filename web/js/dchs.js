@@ -1,17 +1,18 @@
-//$('.header').height($(window).height());
 $(document).ready(function() {
     $.get("api/player", function(data) {
         $(".playerlist").append("<p>Test</p>");
     });
 })
 
+let spielmodus = 501
+
 $("#neuerSpieler").click(function(e) {
-    //e.preventDefault();
-    //$(".playerlist").append("<p>Test</p>");
-    /*"last-name": $('#last-name').val()*/
+    e.preventDefault();
+    var spieler = $("#spieler-name").val()
+        //alert("Modal submitted with text: " + field1value);
     var person = {
-        name: "Horst",
-        points: 501
+        name: spieler,
+        points: spielmodus
     };
     $.ajax({
         type: "POST",
@@ -20,31 +21,19 @@ $("#neuerSpieler").click(function(e) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(result) {
-            var returnedData = JSON.parse(result);
+            var returnedData = result;
             //returnedData.name
             content = playerbuttonStart;
             content += returnedData.name;
             content += playerbuttonEnd;
-            $(content).appendTo('.playerlist');
+            $(content).appendTo('#playerlist');
             $('.playerlist').append(createPlayerButton());
         },
         error: function(result) {
             alert('Spieler konnte nicht angelegt werden.');
         }
-    });
+    })
 });
 
-var playerbuttonStart = '<div class="row"><div class="col-sm-3"><button type="button" class="btn btn-primary btn-lg btn-block">';
-var playerbuttonEnd = '</button></div></div>';
-
-$(document).ready(function() {
-    $('.playerlist').append(playerbutton);
-});
-
-function createPlayerButton() {
-    return $('<button/>', {
-        text: 'Refresh Data',
-        id: 'btn_refresh',
-        click: ClickRefresh
-    });
-}
+let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block">';
+let playerbuttonEnd = '</button></div>';

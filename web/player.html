@@ -39,19 +39,18 @@
             </div>
         </div>
 
-        <div class="row flex-fill">
-            <div class="col-sm-12">
-                <div class="jumbotron jumbotron-fluid">
-                    <div class="container">
-                        <div class="playerlist">
 
-                        </div>
-                        <hr class="my-2">
+        <div class="jumbotron">
+            <div class="container-fluid">
+                <div class="row" id="playerlist">
 
-                    </div>
                 </div>
             </div>
+
+            <hr class="my-2">
         </div>
+
+
 
         <div class="row">
             <div class="col"></div>
@@ -73,14 +72,14 @@
                 <span aria-hidden="true">&times;</span>
               </button>
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <input type="text" class="form-control" id="spieler-name">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="neuerSpieler" class="btn btn-primary" data-dismiss="modal">Speichern</button>
-                </div>
+                <form>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" id="spieler-name" placeholder="Spielername">
+                    </div>
+                    <div class="modal-footer">
+                        <input id="neuerSpieler" type="submit" class="btn btn-primary" data-dismiss="modal" value="Speichern" />
+                    </div>
+                </form>
             </div>
         </div>
     </div>
