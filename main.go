@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/sdomino/scribble"
 )
 
 type Player struct {
@@ -15,10 +16,20 @@ type Player struct {
 }
 
 var players []Player
+var db *scribble.Driver
 
 func getPlayers(w http.ResponseWriter, r *http.Request) {
+	players = nil
 	fmt.Println("getPlayers")
 	w.Header().Set("Content-Type", "application/json")
+	records, _ := db.ReadAll("players")
+	for _, f := range records {
+		playerFound := Player{}
+		if err := json.Unmarshal([]byte(f), &playerFound); err != nil {
+			fmt.Println("Error unmarshaling player database: ", err)
+		}
+		players = append(players, playerFound)
+	}
 	json.NewEncoder(w).Encode(players)
 }
 
@@ -44,11 +55,17 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(player.Name)
 	player.Points = 501
 	player.ID = "5"
-	players = append(players, player)
+	db.Write("players", player.Name, player)
+	//players = append(players, player)
 	json.NewEncoder(w).Encode(&player)
 }
 
 func main() {
+	var err error
+	db, err = scribble.New("./", nil)
+	if err != nil {
+		fmt.Println("Error creating database: ", err)
+	}
 
 	r := mux.NewRouter()
 
