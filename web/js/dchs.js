@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $.get("api/player", function(data) {
-        //for each player createPlayerButton
+        //for each player call createPlayerButton
         $.each(data, function(index){
             createPlayerButton(data[index].name);
         });
@@ -33,13 +33,32 @@ $("#neuerSpieler").click(function(e) {
     })
 });
 
-let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block">';
+let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block" id="';
+let playerbuttonID = '" onClick="activate(this)" value="not_selected">';
 let playerbuttonEnd = '</button></div>';
 
 function createPlayerButton(name){
     console.log("createPlayerButton");
     content = playerbuttonStart;
     content += name;
+    content += playerbuttonID;
+    content += name;
     content += playerbuttonEnd; 
     $('#playerlist').append(content);
+}
+
+function activate(btn) {
+    var property = document.getElementById(btn.id);
+    console.log(property.style.backgroundColor);
+    console.log("Vorher: " + btn.val);
+    if (property.val == "not_selected"){
+        property.style.backgroundColor = "#007bff";
+        property.val = "selected";
+        console.log("Nachher: " + property.val);
+    } else {
+        console.log(property.val);
+        property.style.backgroundColor = "#6ab446";
+        property.val = "not_selected";
+        console.log("Nachher: " + property.val);
+    }
 }
