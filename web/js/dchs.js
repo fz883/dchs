@@ -34,7 +34,7 @@ $("#neuerSpieler").click(function(e) {
 });
 
 let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block" id="';
-let playerbuttonID = '" onClick="activate(this)" value="not_selected">';
+let playerbuttonID = '" onClick="activate(this.id)" style="background:rgb(106,180,70);">';
 let playerbuttonEnd = '</button></div>';
 
 function createPlayerButton(name){
@@ -47,18 +47,14 @@ function createPlayerButton(name){
     $('#playerlist').append(content);
 }
 
-function activate(btn) {
-    var property = document.getElementById(btn.id);
-    console.log(property.style.backgroundColor);
-    console.log("Vorher: " + btn.val);
-    if (property.val == "not_selected"){
-        property.style.backgroundColor = "#007bff";
-        property.val = "selected";
-        console.log("Nachher: " + property.val);
+function activate(id) {
+    console.log(id);
+    var background = document.getElementById(id).style.backgroundColor;
+    console.log(background);
+    if ( background == "rgb(106, 180, 70)"){
+        document.getElementById(id).style.background = "rgb(0, 123, 255)";
     } else {
-        console.log(property.val);
-        property.style.backgroundColor = "#6ab446";
-        property.val = "not_selected";
-        console.log("Nachher: " + property.val);
+        console.log(background);
+        document.getElementById(id).style.background = "rgb(106, 180, 70)";
     }
 }

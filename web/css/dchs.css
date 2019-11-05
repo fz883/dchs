@@ -100,6 +100,7 @@ body {
 .btn {
     border: 1px solid #6ab446;
     background-color: #6ab446;
+    background: rgb(106, 180, 70);
     border-radius: 0;
     color: #fff;
 }
