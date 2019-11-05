@@ -98,18 +98,17 @@ body {
 /*--- General Settings ---*/
 
 .btn {
-    border: 1px solid #6ab446;
-    background-color: #6ab446;
+    border: 1px;
     background: rgb(106, 180, 70);
     border-radius: 0;
     color: #fff;
 }
 
-button:hover {
-    border: 1px solid #fff;
-    background: #fff;
-    color: #000;
-}
+button:focus {outline:0;}
+.btn:focus {outline:0;}
+
+button:hover {border: none;}
+.btn:hover {border: none;}
 
 .menutitle {
     font-size: 10em;
