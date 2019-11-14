@@ -10,11 +10,7 @@
 </head>
 
 <body>
-
-
-
     <div class="page-header full-screen container-fluid d-flex flex-column">
-
         <div class="overlay"></div>
         <nav class="navbar navbar-expand-md">
             <a class="navbar-brand" href="#">Logo</a>
@@ -27,41 +23,30 @@
                 </ul>
             </div>
         </nav>
-        <div class="row">
-            <div class="col-sm-6">
-                <button type="button" class="btn btn-primary btn-lg">+ Neuer Spieler</button>
-            </div>
-            <div class="col-sm-6">
-                <h2 style="color: green">Spielmodus</h2>
-                <p><button type="button" class="btn btn-primary btn-lg">501</button></p>
-                <p><button type="button" class="btn btn-primary btn-lg">301</button></p>
-            </div>
-        </div>
 
-        <div class="row flex-fill ">
-            <div class="col-sm-12">
-                <div class="jumbotron jumbotron-fluid">
-                    <div class="container">
-                        <h1 class="display-3">Fluid jumbo heading</h1>
-                        <p class="lead">Jumbo helper text</p>
-                        <hr class="my-2">
-                        <p>More info</p>
-                        <p class="lead">
-                            <a class="btn btn-primary btn-lg" href="Jumbo action link" role="button">Jumbo action name</a>
-                        </p>
+        <div class="container-fluid h-100">
+            <div class="row justify-content-center h-100">
+
+                <div class="col-10 hidden-md-down" id="yellow">
+                    <div class="row justify-content-center h-100">
+                        <div class="col-12 hidden-md-down" id="yellow-30">
+                            Yellow-30
+                        </div>
+                        <div class="col-12 hidden-md-down" id="red-70">
+                            red-70 </div>
                     </div>
+                </div>
+
+                <div class="col-2" id="green">
+                    Form Goes Here
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col">
-                <button type="button" class="btn btn-primary btn-lg">Spiel Starten</button>
-            </div>
-        </div>
+
     </div>
+
+
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>

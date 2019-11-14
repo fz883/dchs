@@ -2,6 +2,7 @@ body {
     padding: 0;
     margin: 0;
     background: #f2f6e9;
+    height: 100%;
 }
 
 
@@ -32,6 +33,33 @@ body {
 .jumbotron {
     height: 65vh;
     background: rgba(204, 204, 204, 0.5);
+}
+
+#yellow {
+    height: 100%;
+    background: yellow;
+}
+
+#yellow-30 {
+    height: 30%;
+    background: orange;
+}
+
+#red-70 {
+    height: 70%;
+    background: red;
+}
+
+#green {
+    height: 100%;
+    background: green;
+}
+
+.full-height {
+    min-height: 100%;
+    overflow: hidden;
+    margin-bottom: -9999px;
+    padding-bottom: 9999px;
 }
 
 
@@ -104,11 +132,21 @@ body {
     color: #fff;
 }
 
-button:focus {outline:0;}
-.btn:focus {outline:0;}
+button:focus {
+    outline: 0;
+}
 
-button:hover {border: none;}
-.btn:hover {border: none;}
+.btn:focus {
+    outline: 0;
+}
+
+button:hover {
+    border: none;
+}
+
+.btn:hover {
+    border: none;
+}
 
 .menutitle {
     font-size: 10em;
