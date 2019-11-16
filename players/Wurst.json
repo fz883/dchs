@@ -1,6 +1,7 @@
 {
-	"id": "",
 	"name": "Wurst",
 	"status": "inaktiv",
-	"points": 501
+	"points": 501,
+	"avg": 0,
+	"gamesplayed": 0
 }

@@ -10,10 +10,11 @@ import (
 )
 
 type Player struct {
-	ID     string `json:"id" `
-	Name   string `json:"name"`
-	Status string `json:"status"`
-	Points int    `json:"points"`
+	Name        string `json:"name"`
+	Status      string `json:"status"`
+	Points      int    `json:"points"`
+	Average     int    `json:"avg" `
+	GamesPlayed int    `json:"gamesplayed" `
 }
 
 var players []Player
@@ -52,7 +53,6 @@ func getPlayer(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-	//json.NewEncoder(w).Encode(&Player{})
 }
 
 func createPlayer(w http.ResponseWriter, r *http.Request) {
@@ -62,7 +62,6 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&player)
 	fmt.Println(player.Name)
 	player.Points = 501
-	player.ID = "5"
 	readPlayers()
 	for _, f := range players {
 		if player.Name == f.Name {
@@ -70,7 +69,6 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	db.Write("players", player.Name, player)
-	//players = append(players, player)
 	json.NewEncoder(w).Encode(&player)
 }
 

@@ -1,6 +1,7 @@
 {
-	"id": "",
 	"name": "Jakob",
-	"status": "aktiv",
-	"points": 501
+	"status": "inaktiv",
+	"points": 501,
+	"avg": 0,
+	"gamesplayed": 0
 }

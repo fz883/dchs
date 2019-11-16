@@ -1,6 +1,7 @@
 {
-	"id": "",
 	"name": "Heribert",
 	"status": "aktiv",
-	"points": 501
+	"points": 501,
+	"avg": 0,
+	"gamesplayed": 0
 }

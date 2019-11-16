@@ -50,6 +50,11 @@ body {
     background: red;
 }
 
+.centerGameButtons {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
 #green {
     height: 100%;
     background: green;
