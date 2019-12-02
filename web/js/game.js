@@ -8,36 +8,17 @@ $(document).ready(function() {
     });
 });
 
-let spielmodus = 501;
-
 var person = {
     name: '',
     status: 'inaktiv',
-    points: spielmodus
-};
-
-let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block" id="';
-let playerbuttonID = '" onClick="select(this.id)" style="background:rgb(106,180,70);">';
-let playerbuttonEnd = '</button></div>';
-
-function createPlayerButton(name) {
-    content = playerbuttonStart;
-    content += name;
-    content += playerbuttonID;
-    content += name;
-    content += playerbuttonEnd;
-    $('#playerlist').append(content);
 };
 
 
 //API FUNCTIONS
 
-$("#neuerSpieler").click(function(e) {
-    e.preventDefault();
-    person.name = $("#spieler-name").val();
-    person.status = 'inaktiv';
-    createPlayer();
-});
+function points(pointbtn){
+    console.log(pointbtn.value)
+}
 
 function createPlayer() {
     $.ajax({

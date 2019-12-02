@@ -37,17 +37,22 @@ body {
 
 #yellow {
     height: 100%;
-    background: yellow;
+    /*background: yellow;*/
 }
 
 #yellow-30 {
     height: 30%;
-    background: orange;
+    /*background: orange;*/
 }
 
 #red-70 {
     height: 70%;
-    background: red;
+    /*background: red;*/
+}
+
+#green {
+    height: 100%;
+    background: green;
 }
 
 .centerGameButtons {
@@ -55,9 +60,26 @@ body {
     margin-bottom: auto;
 }
 
-#green {
-    height: 100%;
-    background: green;
+#pointbtn{
+    background: whitesmoke;
+    color: black;
+    font-size: 2em;
+    width: 100px !important;
+    height: 100px !important;
+    transition:0s 100ms;
+}
+
+#pointbtn:active,#pointbtn2:active{
+    background: red;
+    transition:0s;
+}
+
+#pointbtn2{
+    background: whitesmoke;
+    color: black;
+    font-size: 2em;
+    height: 70px !important;
+    transition:0s 100ms;
 }
 
 .full-height {
@@ -133,24 +155,17 @@ body {
 .btn {
     border: 1px;
     background: rgb(106, 180, 70);
-    border-radius: 0;
+    border-radius: 0!important;;
     color: #fff;
+    box-shadow: none!important;
 }
 
-button:focus {
-    outline: 0;
+.playerbtn:focus {
+    outline: 0!important;;
 }
 
-.btn:focus {
-    outline: 0;
-}
-
-button:hover {
-    border: none;
-}
-
-.btn:hover {
-    border: none;
+.playerbtn:hover {
+    border: none!important;;
 }
 
 .menutitle {

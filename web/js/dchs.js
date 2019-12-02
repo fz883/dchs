@@ -16,8 +16,8 @@ var person = {
     points: spielmodus
 };
 
-let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block" id="';
-let playerbuttonID = '" onClick="select(this.id)" style="background:rgb(106,180,70);">';
+let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block playerbtn" id="';
+let playerbuttonID = '" onClick="select(this)" style="background:rgb(106,180,70);">';
 let playerbuttonEnd = '</button></div>';
 
 function createPlayerButton(name) {
@@ -57,7 +57,7 @@ function createPlayer() {
 };
 
 function updateStatus() {
-    var apiUrl = "/api/player/update/" + playerbuttonEnd.name;
+    var apiUrl = "/api/player/update/" + person.name;
     $.ajax({
         type: "POST",
         url: apiUrl,
@@ -68,7 +68,7 @@ function updateStatus() {
 };
 
 function updatePoints() {
-    var apiUrl = "/api/player/update/" + playerbuttonEnd.name;
+    var apiUrl = "/api/player/update/" + person.name;
     $.ajax({
         type: "POST",
         url: apiUrl,
@@ -80,19 +80,20 @@ function updatePoints() {
 
 
 
-function select(id) {
+function select(btn) {
     let returnedData;
-    $.get("/api/player/" + id, function(data) {
+    $.get("/api/player/" + btn.id, function(data) {
         returnedData = data;
         console.log(returnedData.status);
+        console.log(btn.id);
         if (returnedData.status == "inaktiv") {
-            document.getElementById(id).style.background = "rgb(0, 123, 255)";
+            document.getElementById(btn.id).style.background = "rgb(0, 123, 255)";
             person.name = returnedData.name;
             person.status = 'aktiv';
             updateStatus();
 
         } else {
-            document.getElementById(id).style.background = "rgb(106, 180, 70)";
+            document.getElementById(btn.id).style.background = "rgb(106, 180, 70)";
             person.name = returnedData.name;
             person.status = 'inaktiv';
             updateStatus();
