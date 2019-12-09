@@ -10,13 +10,20 @@ import (
 )
 
 type Player struct {
-	Name        string `json:"name"`
-	Status      string `json:"status"`
-	Points      int    `json:"points"`
-	Average     int    `json:"avg" `
-	GamesPlayed int    `json:"gamesplayed" `
+	Name     string `json:"name"`
+	Status   string `json:"status"`
+	Finished string `json:"finished"`
+	ID       int    `json:"id"`
+	Points   int    `json:"points"`
+	Average  int    `json:"avg" `
 }
 
+type GameData struct {
+	PlayerLoad int
+	GameMode   int
+}
+
+var gameData GameData
 var players []Player
 var db *scribble.Driver
 
@@ -39,20 +46,51 @@ func getPlayers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(players)
 }
 
+func activePlayers(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("getPlayers")
+	w.Header().Set("Content-Type", "application/json")
+	readPlayers()
+	var tmpPlayers []Player
+	for _, p := range players {
+		if p.Status == "aktiv" {
+			tmpPlayers = append(tmpPlayers, p)
+		}
+	}
+	json.NewEncoder(w).Encode(tmpPlayers)
+}
+
 func getPlayer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getPlayer")
 	w.Header().Set("Content-Type", "application/json")
 	readPlayers()
-	p := mux.Vars(r)
-	fmt.Println(players)
-	for _, item := range players {
-		fmt.Println(item.Name)
-		if item.Name == p["name"] {
-			fmt.Println("Match!")
-			json.NewEncoder(w).Encode(item)
+	v := mux.Vars(r)
+	for _, p := range players {
+		fmt.Println(p.Name)
+		if p.Name == v["name"] {
+			fmt.Println(p)
+			json.NewEncoder(w).Encode(p)
 			break
 		}
 	}
+}
+
+func setID(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("setID")
+	w.Header().Set("Content-Type", "application/json")
+	var tmpPlayer Player
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&tmpPlayer)
+	if err != nil {
+		panic(err)
+	}
+	readPlayers()
+	for _, p := range players {
+		if p.Name == tmpPlayer.Name {
+			p.ID = tmpPlayer.ID
+			db.Write("players", p.Name, p)
+		}
+	}
+
 }
 
 func createPlayer(w http.ResponseWriter, r *http.Request) {
@@ -77,8 +115,22 @@ func updatePlayer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var player Player
 	json.NewDecoder(r.Body).Decode(&player)
+	fmt.Println(player)
 	db.Write("players", player.Name, player)
 	json.NewEncoder(w).Encode(&player)
+}
+
+func initGame() {
+	readPlayers()
+	for _, item := range players {
+		item.Points = 501
+		item.Status = "inaktiv"
+		item.Finished = "false"
+		item.ID = 0
+		db.Write("players", item.Name, item)
+	}
+	gameData.PlayerLoad = 0
+	gameData.GameMode = 501
 }
 
 func main() {
@@ -88,11 +140,14 @@ func main() {
 		fmt.Println("Error creating database: ", err)
 	}
 
+	initGame()
+
 	r := mux.NewRouter()
 
 	//r.HandleFunc("/<your-url>", <function-name>).Methods("<method>")
 	r.HandleFunc("/api/player", getPlayers).Methods("GET")
 	r.HandleFunc("/api/player/{name}", getPlayer).Methods("GET")
+	r.HandleFunc("/api/active", activePlayers).Methods("GET")
 	r.HandleFunc("/api/player/update/{name}", updatePlayer).Methods("POST")
 	r.HandleFunc("/api/player", createPlayer).Methods("POST")
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./web/")))

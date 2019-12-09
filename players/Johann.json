@@ -1,7 +1,8 @@
 {
 	"name": "Johann",
-	"status": "aktiv",
+	"status": "inaktiv",
+	"finished": "false",
+	"id": 0,
 	"points": 501,
-	"avg": 0,
-	"gamesplayed": 0
+	"avg": 0
 }
