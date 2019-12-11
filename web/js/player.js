@@ -2,8 +2,14 @@ $(document).ready(function() {
     $.get("api/player", function(data) {
         //for each player call createPlayerButton
         $.each(data, function(index) {
-            createPlayerButton(data[index].name);
+            createPlayerButton(data[index].id, data[index].name);
+            if (data[index].status == "aktiv"){
+                console.log("oh wow")
+                $("#"+ data[index].id).addClass("active");
+            }
         });
+
+
 
     });
 });
@@ -21,9 +27,9 @@ let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="
 let playerbuttonID = '" onClick="select(this)">'; // style="background:rgb(106,180,70);"
 let playerbuttonEnd = '</button></div>';
 
-function createPlayerButton(name) {
+function createPlayerButton(id, name) {
     content = playerbuttonStart;
-    content += name;
+    content += id;
     content += playerbuttonID;
     content += name;
     content += playerbuttonEnd;
@@ -39,6 +45,23 @@ $("#neuerSpieler").click(function(e) {
     person.status = 'inaktiv';
     createPlayer();
 });
+
+function createPlayer() {
+    $.ajax({
+        type: "POST",
+        url: "/api/player",
+        data: JSON.stringify(person),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(result) {
+            var returnedData = result;
+            createPlayerButton(returnedData.id, returnedData.name);
+        },
+        error: function(result) {
+            alert('Spieler konnte nicht angelegt werden.');
+        }
+    })
+};
 
 function getPlayer(id){
     var getUrl = "/api/player/" + id;
@@ -57,22 +80,7 @@ function getPlayer(id){
     return res;
 }
 
-function createPlayer() {
-    $.ajax({
-        type: "POST",
-        url: "/api/player",
-        data: JSON.stringify(person),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(result) {
-            var returnedData = result;
-            createPlayerButton(returnedData.name);
-        },
-        error: function(result) {
-            alert('Spieler konnte nicht angelegt werden.');
-        }
-    })
-};
+
 
 function update() {
     console.log("update")
@@ -89,7 +97,15 @@ function update() {
 
 
 function select(btn) {
-    if (getPlayer(btn.id)){
+    var postUrl = "/api/player/select/" + btn.id;
+    $.ajax({
+        type: "POST",
+        url: postUrl,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+    })
+    
+    /*if (getPlayer(btn.id)){
         if (person.status == "inaktiv") {
             //document.getElementById(btn.id).button('toggle');
             //document.getElementById(btn.id).style.background = "rgb(0, 123, 255)";        
@@ -101,5 +117,5 @@ function select(btn) {
             window.person.status = 'inaktiv';
             update();
         }
-    }
+    }*/
 };

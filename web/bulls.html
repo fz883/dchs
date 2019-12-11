@@ -10,38 +10,59 @@
 </head>
 
 <body>
-
-
-
     <div class="page-header full-screen container-fluid d-flex flex-column">
         <div class="overlay"></div>
-        <div class="row">
-            <div class="col-sm-6 text-center d-flex align-items-center">
-                <h1>Bulls-Eye</h1>
-            </div>
-            <div class="col-sm-6 text-center">
+
+        <div class="container-fluid h-100">
+            <div class="row justify-content-center h-100" >              
                 
-            </div>
-        </div>
+                <div class="col-9 hidden-md-down" id="h100">
+                    <div class="row justify-content-center h-100">
+                        
+                        <div class="col-12 hidden-md-down" id="h20">
+                            <div class="row flex-grow-1">
+                                <h1>Bulls-Eye Header</h1>
+                            </div>
+                            <hr class="my-2">
+                        </div>
+                        
+                        <div class="col-12 hidden-md-down d-flex flex-column" id="h70">
+                            <div class="jumbotron">
+                                <div class="container-fluid">
+                                    <div class="row" id="playerlist"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 hidden-md-down" id="h10">
+                            <div class="row justify-content-center h-100">
+                                <div class="col-3 text-center">
+                                    <a href="player.html"><button type="button" class="btn btn-primary btn-lg">Zurück</button></a>
+                                </div>
+                                <div class="col"></div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-3 hidden-md-down" id="startinglist">
+                    <div class="row justify-content-center h-100">
+                        <div class="col-12" id="h85">
+                                <ul class="list-group" id="bullslist"></ul>
+                        </div>
+                        <div class="col-12 text-center">
+                                <a href="game.html"><button type="button" class="btn btn-primary btn-lg">Spiel Starten</button></a>
+                        </div>    
+                    </div>
+                </div>
 
 
-        <div class="jumbotron">
-            <div class="container-fluid">
-                <div class="row" id="playerlist"></div>
-            </div>
-        </div>
 
-
-
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col text-center">
-                <a href="game.html"><button type="button" class="btn btn-primary btn-lg">Spiel Starten</button></a>
             </div>
         </div>
     </div>
-
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
