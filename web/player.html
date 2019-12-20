@@ -38,10 +38,14 @@
 
 
         <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
             <div class="col text-center">
-                <a href="bulls.html"><button type="button" class="btn btn-primary btn-lg">Bulls-Eye</button></a>
+                    <a href="index.html"><button type="button" class="btn btn-primary btn-lg">Hauptmenü</button></a>
+            </div>
+            <div class="col text-center">
+                   <button type="button" class="btn btn-primary btn-lg" onClick="reset()">Auswahl löschen</button>
+            </div>
+            <div class="col text-center">
+                <a href="game.html"><button type="button" class="btn btn-primary btn-lg">Spiel Starten</button></a>
             </div>
         </div>
     </div>
@@ -58,7 +62,9 @@
                 </div>
                 <form>
                     <div class="modal-body">
-                        <input type="text" class="form-control" id="spieler-name" placeholder="Spielername">
+                        <form autocomplete="off">
+                            <input type="text" class="form-control" id="spieler-name" placeholder="Spielername" autocomplete="off">
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <input id="neuerSpieler" type="submit" class="btn btn-primary" data-dismiss="modal" value="Speichern" />

@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"sort"
 	"strconv"
 )
 
@@ -44,6 +45,11 @@ func activePlayers(w http.ResponseWriter, r *http.Request) {
 			tmpPlayers = append(tmpPlayers, p)
 		}
 	}
+
+	sort.Slice(tmpPlayers, func(i, j int) bool {
+		return tmpPlayers[i].Order < tmpPlayers[j].Order
+	})
+
 	json.NewEncoder(w).Encode(tmpPlayers)
 }
 
@@ -75,7 +81,6 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func setPoints(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("setID")
 	w.Header().Set("Content-Type", "application/json")
 	var tmpPlayer Player
 	decoder := json.NewDecoder(r.Body)
@@ -85,11 +90,21 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 	}
 	readPlayers()
 	for _, p := range players {
-		if p.Name == tmpPlayer.Name {
-			p.ID = tmpPlayer.ID
+		if p.ID == tmpPlayer.ID {
+			p.Points = tmpPlayer.Points
+			if p.Points == 0 {
+				p.Finished = "true"
+			}
 			db.Write("players", p.Name, p)
+			json.NewEncoder(w).Encode(p)
+			break
 		}
 	}
+}
+
+func resetGame(w http.ResponseWriter, r *http.Request) {
+	initGame()
+
 }
 
 func setID(w http.ResponseWriter, r *http.Request) {
@@ -108,6 +123,7 @@ func setID(w http.ResponseWriter, r *http.Request) {
 			db.Write("players", p.Name, p)
 		}
 	}
+
 }
 
 func switchActive(w http.ResponseWriter, r *http.Request) {
@@ -124,6 +140,8 @@ func switchActive(w http.ResponseWriter, r *http.Request) {
 		if p.ID == playerID {
 			if p.Status == "inaktiv" {
 				p.Status = "aktiv"
+				gameData.PlayerLoad++
+				p.Order = gameData.PlayerLoad
 			} else {
 				p.Status = "inaktiv"
 			}

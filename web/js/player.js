@@ -1,17 +1,6 @@
 $(document).ready(function() {
-    $.get("api/player", function(data) {
-        //for each player call createPlayerButton
-        $.each(data, function(index) {
-            createPlayerButton(data[index].id, data[index].name);
-            if (data[index].status == "aktiv"){
-                console.log("oh wow")
-                $("#"+ data[index].id).addClass("active");
-            }
-        });
-
-
-
-    });
+    reset();
+    loadPButtons();
 });
 
 var person = {
@@ -23,8 +12,20 @@ var person = {
     avg: '',    
 };
 
-let playerbuttonStart = '<div class="col-lg-2" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block playerbtn" data-toggle="button" id="';
-let playerbuttonID = '" onClick="select(this)">'; // style="background:rgb(106,180,70);"
+function loadPButtons(){
+    $.get("api/player", function(data) {
+        //for each player call createPlayerButton
+        $.each(data, function(index) {
+            createPlayerButton(data[index].id, data[index].name);
+            if (data[index].status == "aktiv"){
+                $("#"+ data[index].id).addClass("active");
+            }
+        });
+    });
+}
+
+let playerbuttonStart = '<div class="col-lg-3" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block playerbtn" data-toggle="button" id="';
+let playerbuttonID = '" onClick="select(this)"><span class="badge badge-primary badge-pill"></span>'; // style="background:rgb(106,180,70);"
 let playerbuttonEnd = '</button></div>';
 
 function createPlayerButton(id, name) {
@@ -80,8 +81,6 @@ function getPlayer(id){
     return res;
 }
 
-
-
 function update() {
     console.log("update")
     console.log(person)
@@ -103,19 +102,22 @@ function select(btn) {
         url: postUrl,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-    })
-    
-    /*if (getPlayer(btn.id)){
-        if (person.status == "inaktiv") {
-            //document.getElementById(btn.id).button('toggle');
-            //document.getElementById(btn.id).style.background = "rgb(0, 123, 255)";        
-            window.person.status = 'aktiv';
-            update();
-    
-        } else {
-            //document.getElementById(btn.id).style.background = "rgb(106, 180, 70)";
-            window.person.status = 'inaktiv';
-            update();
+        success: function(result) {
+            $("#" + result.id + " .badge.badge-primary.badge-pill").text(result.order);
+            $("#"+ result.id).attr("disabled", true);
         }
-    }*/
+    })
+};
+
+function reset(){
+    var resetUrl = "/api/reset"
+    $.ajax({
+        type: "POST",
+        url: resetUrl,
+        success: function(result) {
+            $(".playerbtn .badge.badge-primary.badge-pill").text('');
+            $(".playerbtn").attr("disabled", false);
+            $(".playerbtn").removeClass("active");
+        }
+    })
 };

@@ -69,9 +69,14 @@ body {
 }
 
 
+.badge-pill{
+    margin-right: 20px;
+}
 
-
-
+.jumbotron {
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
 
 
 

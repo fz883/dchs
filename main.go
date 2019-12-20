@@ -14,7 +14,9 @@ type Player struct {
 	Status   string `json:"status"`
 	Finished string `json:"finished"`
 	Points   int    `json:"points"`
-	Average  int    `json:"avg" `
+	Score    []int  `json:"score"`
+	Average  int    `json:"avg"`
+	Order    int    `json:"order"`
 }
 
 type GameData struct {
@@ -31,6 +33,7 @@ func initGame() {
 		item.Points = 501
 		item.Status = "inaktiv"
 		item.Finished = "false"
+		item.Order = 0
 		db.Write("players", item.Name, item)
 	}
 	gameData.PlayerLoad = 0
@@ -54,6 +57,8 @@ func main() {
 	r.HandleFunc("/api/active", activePlayers).Methods("GET")
 	r.HandleFunc("/api/player/select/{id}", switchActive).Methods("POST")
 	r.HandleFunc("/api/player", createPlayer).Methods("POST")
+	r.HandleFunc("/api/player/points", setPoints).Methods("POST")
+	r.HandleFunc("/api/reset", resetGame).Methods("POST")
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./web/")))
 
 	http.ListenAndServe(":2222", r)

@@ -30,7 +30,7 @@ function createPlayerButton(id, name) {
 
 
 let bullsListStart = '<li class="list-group-item d-flex justify-content-between align-items-center"><span class="badge badge-primary badge-pill">';
-let bullsListID = 0
+let bullsListID = 1
 let bullsListMiddle = '</span>';
 
 function createPlayerList(name) {
