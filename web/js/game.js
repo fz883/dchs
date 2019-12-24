@@ -1,6 +1,6 @@
-$(document).ready(function() {
-    $.when(getActive()).done(function(data){
-        $.each(data, function(index) {
+$(document).ready(function () {
+    $.when(getActive()).done(function (data) {
+        $.each(data, function (index) {
             createPlayerList(data[index]);
             playerlist.push(data[index].id);
             playercount += 1;
@@ -9,7 +9,7 @@ $(document).ready(function() {
     });
 });
 
-function getActive(){
+function getActive() {
     return $.ajax({
         url: "/api/active",
     });
@@ -19,6 +19,8 @@ function getActive(){
 var playercount = 0;
 var index = 0;
 var playerlist = [];
+var double = 1;
+var triple = 1;
 
 
 var person = {
@@ -42,14 +44,14 @@ function createPlayerList(player) {
     $('#bullslist').append(content);
 };
 
-function next(playerid){
+function next(playerid) {
     console.log(playerid);
     var getUrl = "/api/player/" + playerid;
     $.ajax({
         url: getUrl,
-        success: function(result) {
+        success: function (result) {
             var returnedData = result;
-            if (returnedData.finished == "true"){
+            if (returnedData.finished == "true") {
                 callNext();
             } else {
                 person.name = returnedData.name;
@@ -65,34 +67,47 @@ function next(playerid){
     });
 };
 
-function displayPoints(points){
+function displayPoints(points) {
     $("#punktzahl").html(points);
 }
 
-function points(btn){
-    if ((person.points - btn.value) < 0){
-        console.log(typeof person.points)
-        console.log(typeof person.score1)
-        person.points += parseInt(person.score1);
-        person.points += parseInt(person.score2);
-        person.points += parseInt(person.score3);
-        console.log("too much: " + person.points)
-        scoredthree = true;
-    } else {
+function doubleActive() {
+    double = 2;
+}
 
-        person.points -= btn.value;
-        if (person.score1 == ''){
-            console.log(person.name + " scores " + btn.value + " with the first dart");
-            person.score1 = btn.value;
-        } else if (person.score2 == ''){
-            console.log(person.name + " scores " + btn.value + " with the second dart");
-            person.score2 = btn.value;
-        } else if (person.score3 == ''){
-            console.log(person.name + " scores " + btn.value + " with the third dart");
-            person.score3 = btn.value;
+function tripleActive() {
+    triple = 3;
+    $('#pointbtn[value="25"]').attr("disabled", true);
+}
+
+function points(btn) {
+
+    // if double --> double = 2 // Triple
+    totalscore = (btn.value * double * triple);
+
+    if (((person.points - totalscore) > 1) || (((person.points - totalscore) === 0) && (double == 2))) {
+        person.points -= totalscore;
+        if (person.score1 === '') {
+            console.log(person.name + " scores " + totalscore + " with the first dart");
+            person.score1 = parseInt(totalscore);
+        } else if (person.score2 === '') {
+            console.log(person.name + " scores " + totalscore + " with the second dart");
+            person.score2 = parseInt(totalscore);
+        } else if (person.score3 === '') {
+            console.log(person.name + " scores " + totalscore + " with the third dart");
+            person.score3 = parseInt(totalscore);
             var scoredthree = true;
         }
-    }
+    } else { //if ((person.points - totalscore) <= 1) 
+
+        person.points += person.score1;
+        person.points += person.score2;
+        person.points += person.score3;
+        //hacky hack....
+        person.points = parseInt(person.points);
+        console.log(person.name + " scores " + totalscore + "! Too much!");
+        scoredthree = true;
+    } 
 
     var postUrl = "/api/player/points";
     $.ajax({
@@ -101,43 +116,49 @@ function points(btn){
         data: JSON.stringify(person),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function(result) {
+        success: function (result) {
             var returnedData = result;
             person.points = returnedData.points;
-            if (!scoredthree){
+            if (!scoredthree) {
                 displayPoints(person.points);
             }
         }
     })
 
-    if (scoredthree || person.points == 0){
+    double = 1;
+    $("#doublebtn").removeClass("active");
+    triple = 1;
+    $("#triplebtn").removeClass("active");
+    $('#pointbtn[value="25"]').attr("disabled", false);
+
+    if (scoredthree || person.points == 0) {
         console.log("Neeext");
         callNext();
     }
 
-    
+
 }
 
-function callNext(){
+function callNext() {
     index += 1;
-    if (index > playercount - 1){
+    if (index > playercount - 1) {
         index = 0;
     }
     var gameFinished = true;
-    $.when(getActive()).done(function(data){
-        $.each(data, function(index) {
-            if (data[index].finished == "false"){ 
-                gameFinished = false;       
+    $.when(getActive()).done(function (data) {
+        $.each(data, function (index) {
+            if (data[index].finished == "false") {
+                gameFinished = false;
                 return gameFinished;
-            } 
+            }
         });
-        if (gameFinished){
+        if (gameFinished) {
             console.log("End of game");
         } else {
             next(playerlist[index]);
         }
     });
-    
+
 }
 
 

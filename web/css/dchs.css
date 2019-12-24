@@ -109,18 +109,18 @@ body {
     transition:0s 100ms;
 }
 
-#pointbtn:active,#pointbtn2:active{
+#pointbtn:active/*#zerobtn:active,#doublebtn:active*/{
     background: red;
     transition:0s;
 }
-
-#pointbtn2{
+/*
+#zerobtn,#doublebtn,#triplebtn,#backbtn{
     background: whitesmoke;
     color: black;
     font-size: 2em;
     height: 70px !important;
-    transition:0s 100ms;
-}
+    /*transition:0s 100ms;
+}*/
 
 .full-height {
     min-height: 100%;
