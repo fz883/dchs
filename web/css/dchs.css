@@ -113,6 +113,10 @@ body {
     background: red;
     transition:0s;
 }
+
+#spielername{
+    margin-top: 20px;
+}
 /*
 #zerobtn,#doublebtn,#triplebtn,#backbtn{
     background: whitesmoke;

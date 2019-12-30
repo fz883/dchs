@@ -5,6 +5,7 @@ $(document).ready(function () {
             playerlist.push(data[index].id);
             playercount += 1;
         });
+        $("#newsticker").html("Newsticker: ");
         next(playerlist[index]);
     });
 });
@@ -60,24 +61,43 @@ function next(playerid) {
                 person.score1 = '';
                 person.score2 = '';
                 person.score3 = '';
-                displayPoints(returnedData.points);
+                displayPoints(returnedData.points, returnedData.avg);
                 $("#spielername").html(returnedData.name);
+                $("#dart1").html("-");
+                $("#dart2").html("-");
+                $("#dart3").html("-");
             }
         }
     });
 };
 
-function displayPoints(points) {
+function displayPoints(points, avg) {
     $("#punktzahl").html(points);
+    $("#average").html(avg);
 }
 
 function doubleActive() {
-    double = 2;
+    if (double === 2) {
+        double = 1;
+        $("#doublebtn").removeClass("active");
+        $('#triplebtn').attr("disabled", false);
+    } else {
+        double = 2;
+        $('#triplebtn').attr("disabled", true);
+    }
 }
 
 function tripleActive() {
-    triple = 3;
-    $('#pointbtn[value="25"]').attr("disabled", true);
+    if (triple === 3){
+        triple = 1;
+        $("#triplebtn").removeClass("active");
+        $('#pointbtn[value="25"]').attr("disabled", false);
+        $('#doublebtn').attr("disabled", false);
+    } else{
+        triple = 3;
+        $('#pointbtn[value="25"]').attr("disabled", true);
+        $('#doublebtn').attr("disabled", true);
+    }
 }
 
 function points(btn) {
@@ -88,14 +108,18 @@ function points(btn) {
     if (((person.points - totalscore) > 1) || (((person.points - totalscore) === 0) && (double == 2))) {
         person.points -= totalscore;
         if (person.score1 === '') {
-            console.log(person.name + " scores " + totalscore + " with the first dart");
             person.score1 = parseInt(totalscore);
+            $("#dart1").html(totalscore);
+            $("#newsticker").html("Newsticker: " + person.name + " wirft " + totalscore + " Punkte mit dem ersten Dart!")
+            //Peter wirft xxx Punkte mit dem ersten Dart
         } else if (person.score2 === '') {
-            console.log(person.name + " scores " + totalscore + " with the second dart");
             person.score2 = parseInt(totalscore);
+            $("#dart2").html(totalscore);
+            $("#newsticker").html("Newsticker: " + person.name + " wirft " + totalscore + " Punkte mit dem zweiten Dart!")
         } else if (person.score3 === '') {
-            console.log(person.name + " scores " + totalscore + " with the third dart");
             person.score3 = parseInt(totalscore);
+            $("#dart3").html(totalscore);
+            $("#newsticker").html("Newsticker: " + person.name + " wirft " + totalscore + " Punkte mit dem dritten Dart!")
             var scoredthree = true;
         }
     } else { //if ((person.points - totalscore) <= 1) 
@@ -105,7 +129,7 @@ function points(btn) {
         person.points += person.score3;
         //hacky hack....
         person.points = parseInt(person.points);
-        console.log(person.name + " scores " + totalscore + "! Too much!");
+        $("#newsticker").html("Newsticker: " + person.name + " wirft " + totalscore + " Punkte! No Score!")
         scoredthree = true;
     } 
 
@@ -120,7 +144,7 @@ function points(btn) {
             var returnedData = result;
             person.points = returnedData.points;
             if (!scoredthree) {
-                displayPoints(person.points);
+                displayPoints(person.points, returnedData.avg);
             }
         }
     })

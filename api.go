@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"net/http"
 	"path"
 	"sort"
@@ -91,7 +92,9 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 	readPlayers()
 	for _, p := range players {
 		if p.ID == tmpPlayer.ID {
+			p.Score = append(p.Score, p.Points-tmpPlayer.Points)
 			p.Points = tmpPlayer.Points
+			p.Average = math.Round((float64((501-p.Points))/float64(len(p.Score))*float64(3.00))*100) / 100
 			if p.Points == 0 {
 				p.Finished = "true"
 			}

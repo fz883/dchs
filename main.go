@@ -9,14 +9,14 @@ import (
 )
 
 type Player struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	Status   string `json:"status"`
-	Finished string `json:"finished"`
-	Points   int    `json:"points"`
-	Score    []int  `json:"score"`
-	Average  int    `json:"avg"`
-	Order    int    `json:"order"`
+	ID       int     `json:"id"`
+	Name     string  `json:"name"`
+	Status   string  `json:"status"`
+	Finished string  `json:"finished"`
+	Points   int     `json:"points"`
+	Score    []int   `json:"score"`
+	Average  float64 `json:"avg"`
+	Order    int     `json:"order"`
 }
 
 type GameData struct {
@@ -34,6 +34,8 @@ func initGame() {
 		item.Status = "inaktiv"
 		item.Finished = "false"
 		item.Order = 0
+		item.Average = 0
+		item.Score = nil
 		db.Write("players", item.Name, item)
 	}
 	gameData.PlayerLoad = 0
