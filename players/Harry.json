@@ -3,12 +3,12 @@
 	"name": "Harry",
 	"status": "aktiv",
 	"finished": "false",
-	"points": 462,
+	"points": 454,
 	"score": [
 		13,
-		19,
-		7
+		20,
+		14
 	],
-	"avg": 39,
-	"order": 1
+	"avg": 47,
+	"order": 3
 }

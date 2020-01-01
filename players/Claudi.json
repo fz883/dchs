@@ -3,12 +3,12 @@
 	"name": "Claudi",
 	"status": "aktiv",
 	"finished": "false",
-	"points": 443,
+	"points": 465,
 	"score": [
-		25,
-		17,
-		16
+		11,
+		13,
+		12
 	],
-	"avg": 58,
-	"order": 2
+	"avg": 36,
+	"order": 1
 }

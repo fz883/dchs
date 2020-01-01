@@ -10,6 +10,21 @@ $(document).ready(function () {
     });
 });
 
+function updateList(){
+    $.when(getActive()).done(function (data) {
+        $.each(data, function (index) {
+            order = data[index].order;
+            score = data[index].score;
+            score1 = score[score.length-3];
+            score2 = score[score.length-2];
+            score3 = score[score.length-1];
+            $("#" + order + "-score-1").html(score1);
+            $("#" + order + "-score-2").html(score2);
+            $("#" + order + "-score-3").html(score3);
+        });
+    });
+}
+
 function getActive() {
     return $.ajax({
         url: "/api/active",
@@ -33,20 +48,34 @@ var person = {
     score3: ''
 };
 
-let bullsListStart = '<li class="list-group-item d-flex justify-content-between align-items-center"><span class="badge badge-primary badge-pill">';
-let bullsListMiddle = '</span>';
+list1='<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col" id="list-player-name">';
+list2='</div>|<div class="col text-center" id="';
+list3='-score-1" style="padding: 0;"></div>|<div class="col text-center" id="';
+list4='-score-2" style="padding: 0;"></div>|<div class="col text-center" id="';
+list5='-score-3" style="padding: 0;"></div>|<div class="col" id="';
+list6='-points" style="padding-right: 0;">';
+list7='</div></li>';
 
 function createPlayerList(player) {
-    content = bullsListStart;
-    content += player.order;
-    content += bullsListMiddle;
+    content = list1;
     content += player.name;
-    content += "</li>";
-    $('#bullslist').append(content);
+    content += list2;
+    content += player.order;
+    content += list3;
+    content += player.order;
+    content += list4;
+    content += player.order;
+    content += list5;
+    content += player.order;
+    content += list6;
+    content += player.points;
+    content += list7;
+    $('#scorelist').append(content);
 };
 
 function next(playerid) {
     console.log(playerid);
+    updateList();
     var getUrl = "/api/player/" + playerid;
     $.ajax({
         url: getUrl,
@@ -61,7 +90,7 @@ function next(playerid) {
                 person.score1 = '';
                 person.score2 = '';
                 person.score3 = '';
-                displayPoints(returnedData.points, returnedData.avg);
+                displayPoints(returnedData.order, returnedData.points, returnedData.avg);
                 $("#spielername").html(returnedData.name);
                 $("#dart1").html("-");
                 $("#dart2").html("-");
@@ -71,9 +100,10 @@ function next(playerid) {
     });
 };
 
-function displayPoints(points, avg) {
+function displayPoints(order, points, avg) {
     $("#punktzahl").html(points);
     $("#average").html(avg);
+    $("#" + order + "-points").html(points);
 }
 
 function doubleActive() {
@@ -144,15 +174,17 @@ function points(btn) {
             var returnedData = result;
             person.points = returnedData.points;
             if (!scoredthree) {
-                displayPoints(person.points, returnedData.avg);
+                displayPoints(returnedData.order, person.points, returnedData.avg);
             }
         }
     })
 
     double = 1;
     $("#doublebtn").removeClass("active");
+    $('#doublebtn').attr("disabled", false);
     triple = 1;
     $("#triplebtn").removeClass("active");
+    $('#triplebtn').attr("disabled", false);
     $('#pointbtn[value="25"]').attr("disabled", false);
 
     if (scoredthree || person.points == 0) {
