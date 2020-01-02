@@ -1,14 +1,10 @@
 {
 	"id": 3,
 	"name": "Harry",
-	"status": "aktiv",
+	"status": "inaktiv",
 	"finished": "false",
-	"points": 454,
-	"score": [
-		13,
-		20,
-		14
-	],
-	"avg": 47,
-	"order": 3
+	"points": 501,
+	"score": null,
+	"avg": 0,
+	"order": 0
 }

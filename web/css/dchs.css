@@ -78,12 +78,6 @@ body {
     padding-top: 0px;
 }
 
-
-
-
-
-
-
 #startinglist {
     padding-top: 80px;
     height: 100%;
@@ -100,19 +94,7 @@ body {
     margin-bottom: auto;
 }
 
-#pointbtn{
-    background: whitesmoke;
-    color: black;
-    font-size: 2em;
-    width: 100px !important;
-    height: 100px !important;
-    transition:0s 100ms;
-}
 
-#pointbtn:active/*#zerobtn:active,#doublebtn:active*/{
-    background: red;
-    transition:0s;
-}
 
 #spielername{
     margin-top: 20px;
@@ -196,6 +178,15 @@ body {
 
 /*--- General Settings ---*/
 
+
+
+.menutitle {
+    font-size: 5.5em;
+}
+
+/*--- buttons ---*/
+
+/*
 .btn {
     border: 1px;
     background: rgb(106, 180, 70);
@@ -213,6 +204,18 @@ body {
     background: rgb(106, 180, 70);
 }
 
-.menutitle {
-    font-size: 5.5em;
+*/
+
+#pointbtn{
+    background: whitesmoke;
+    color: black;
+    font-size: 2em;
+    width: 100px !important;
+    height: 100px !important;
+    transition:0s 100ms;
+}
+
+#pointbtn:active/*#zerobtn:active,#doublebtn:active*/{
+    background: red;
+    transition:0s;
 }

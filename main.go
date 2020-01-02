@@ -54,6 +54,8 @@ func main() {
 	r := mux.NewRouter()
 
 	//r.HandleFunc("/<your-url>", <function-name>).Methods("<method>")
+	r.HandleFunc("/api/delete/{id}", delete).Methods("GET")
+	r.HandleFunc("/api/switchGame", switchGame).Methods("GET")
 	r.HandleFunc("/api/player", allplayers).Methods("GET")
 	r.HandleFunc("/api/player/{id}", player).Methods("GET")
 	r.HandleFunc("/api/active", activePlayers).Methods("GET")

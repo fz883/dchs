@@ -29,6 +29,23 @@ func player(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func delete(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("delete Player")
+	w.Header().Set("Content-Type", "application/json")
+	readPlayers()
+	playerID, err := strconv.Atoi(path.Base(r.URL.Path))
+	if err != nil {
+		log.Println(err)
+	}
+	for _, p := range players {
+		if p.ID == playerID {
+			db.Delete("players", p.Name)
+			json.NewEncoder(w).Encode(p)
+			break
+		}
+	}
+}
+
 func allplayers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getPlayers")
 	w.Header().Set("Content-Type", "application/json")
@@ -102,6 +119,20 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(p)
 			break
 		}
+	}
+}
+
+func switchGame(w http.ResponseWriter, r *http.Request) {
+	if gameData.GameMode == 501 {
+		gameData.GameMode = 301
+	} else {
+		gameData.GameMode = 501
+	}
+
+	readPlayers()
+	for _, p := range players {
+		p.Points = gameData.GameMode
+		db.Write("players", p.Name, p)
 	}
 }
 

@@ -1,6 +1,9 @@
-$(document).ready(function() {
+$(document).ready(function () {
+    $("#startGame").attr("disabled", true);
+    $("#zuruecksetzen").attr("disabled", true);
+    $("#title").html("Spieler auswählen: ");
     reset();
-    loadPButtons();
+    reload();
 });
 
 var person = {
@@ -9,19 +12,50 @@ var person = {
     finished: '',
     id: '',
     points: '',
-    avg: '',    
+    avg: '',
 };
 
-function loadPButtons(){
-    $.get("api/player", function(data) {
-        //for each player call createPlayerButton
-        $.each(data, function(index) {
+var playercount = 0;
+var deletemode = 0;
+
+function setDelete(){
+    console.log(deletemode);
+    if (deletemode === 0) {
+        deletemode = 1;
+        $('#playerlist :button').css('background-color', 'red');
+        $("#title").html("Welcher Spieler soll gelöscht werden?");
+    } else {
+        $("#title").html("Spieler auswählen: ");
+        $('#playerlist :button').css('background-color', '');
+        deletemode = 0;
+        //$("#deletePlayer").removeClass("active");
+    }
+}
+
+function reload(){
+    playercount = 0;
+    $('#playerlist').empty();
+    $.when(loadPButtons()).done(function (data) {
+        $.each(data, function (index) {
             createPlayerButton(data[index].id, data[index].name);
-            if (data[index].status == "aktiv"){
-                $("#"+ data[index].id).addClass("active");
-            }
+            playercount += 1;
         });
+        checkPlayerCount();
     });
+}
+
+function loadPButtons() {
+    return $.ajax({
+        url: "api/player",
+    });
+}
+
+function checkPlayerCount(){
+    if (playercount >= 20) {
+        $("#newPlayer").attr("disabled", true);
+    } else {
+        $("#newPlayer").attr("disabled", false);
+    }
 }
 
 let playerbuttonStart = '<div class="col-lg-3" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block playerbtn" data-toggle="button" id="';
@@ -37,10 +71,15 @@ function createPlayerButton(id, name) {
     $('#playerlist').append(content);
 };
 
+$("#myButtons :input").change(function () {
+    $.ajax({
+        url: "/api/switchGame",
+    });
+});
 
 //API FUNCTIONS
 
-$("#neuerSpieler").click(function(e) {
+$("#neuerSpieler").click(function (e) {
     e.preventDefault();
     person.name = $("#spieler-name").val();
     person.status = 'inaktiv';
@@ -54,23 +93,25 @@ function createPlayer() {
         data: JSON.stringify(person),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function(result) {
+        success: function (result) {
             var returnedData = result;
             createPlayerButton(returnedData.id, returnedData.name);
+            playercount += 1;
+            checkPlayerCount()
         },
-        error: function(result) {
+        error: function (result) {
             alert('Spieler konnte nicht angelegt werden.');
         }
     })
 };
 
-function getPlayer(id){
+function getPlayer(id) {
     var getUrl = "/api/player/" + id;
     res = false;
     console.log("ajax get");
     $.ajax({
         url: getUrl,
-        success: function(result) {
+        success: function (result) {
             window.person.name = result.name;
             window.person.status = result.status;
             window.person.points = result.points;
@@ -94,27 +135,45 @@ function update() {
     })
 };
 
+function deleteCall(deleteUrl){
+    return $.ajax({
+        url: deleteUrl,
+    })
+}
 
 function select(btn) {
-    var postUrl = "/api/player/select/" + btn.id;
-    $.ajax({
-        type: "POST",
-        url: postUrl,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(result) {
-            $("#" + result.id + " .badge.badge-primary.badge-pill").text(result.order);
-            $("#"+ result.id).attr("disabled", true);
-        }
-    })
+    if (deletemode === 1){
+        console.log("Lösche Spieler " + btn.id);
+        var deleteUrl = "/api/delete/" + btn.id;
+        setDelete();
+        $.when(deleteCall(deleteUrl)).done(function (data) {
+            reload();
+        });
+    } else {
+        $("#startGame").attr("disabled", false);
+        $("#zuruecksetzen").attr("disabled", false);
+        var postUrl = "/api/player/select/" + btn.id;
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#" + result.id + " .badge.badge-primary.badge-pill").text(result.order);
+                $("#" + result.id).attr("disabled", true);
+            }
+        })
+    }
 };
 
-function reset(){
+function reset() {
     var resetUrl = "/api/reset"
     $.ajax({
         type: "POST",
         url: resetUrl,
-        success: function(result) {
+        success: function (result) {
+            $("#startGame").attr("disabled", true);
+            $("#zuruecksetzen").attr("disabled", true);
             $(".playerbtn .badge.badge-primary.badge-pill").text('');
             $(".playerbtn").attr("disabled", false);
             $(".playerbtn").removeClass("active");
