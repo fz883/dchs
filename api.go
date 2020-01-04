@@ -9,6 +9,7 @@ import (
 	"path"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 func player(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +78,8 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	var player Player
 	json.NewDecoder(r.Body).Decode(&player)
 	fmt.Println(player.Name)
+	player.Name = strings.Title(strings.ToLower(player.Name))
+	fmt.Println(player.Name)
 	readPlayers()
 	//return if player exists
 	for _, f := range players {
@@ -99,6 +102,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func setPoints(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("set Points")
 	w.Header().Set("Content-Type", "application/json")
 	var tmpPlayer Player
 	decoder := json.NewDecoder(r.Body)
@@ -110,8 +114,26 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 	for _, p := range players {
 		if p.ID == tmpPlayer.ID {
 			p.Score = append(p.Score, p.Points-tmpPlayer.Points)
+			//no score
+			if p.Points < tmpPlayer.Points {
+				if len(p.Score)%3 == 0 {
+					p.Score = p.Score[:len(p.Score)-3]
+					p.Score = append(p.Score, 0)
+					p.Score = append(p.Score, 0)
+					p.Score = append(p.Score, 0)
+				} else if len(p.Score)%3 == 2 {
+					p.Score = p.Score[:len(p.Score)-2]
+					p.Score = append(p.Score, 0)
+					p.Score = append(p.Score, 0)
+				} else if len(p.Score)%3 == 1 {
+					p.Score = p.Score[:len(p.Score)-1]
+					p.Score = append(p.Score, 0)
+				}
+			}
+			fmt.Println(p.Score)
+
 			p.Points = tmpPlayer.Points
-			p.Average = math.Round((float64((501-p.Points))/float64(len(p.Score))*float64(3.00))*100) / 100
+			p.Average = math.Round((float64((gameData.GameMode-p.Points))/float64(len(p.Score))*float64(3.00))*100) / 100
 			if p.Points == 0 {
 				p.Finished = "true"
 			}

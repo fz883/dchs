@@ -2,6 +2,7 @@ $(document).ready(function () {
     $("#startGame").attr("disabled", true);
     $("#zuruecksetzen").attr("disabled", true);
     $("#title").html("Spieler auswählen: ");
+    
     reset();
     reload();
 });
@@ -59,7 +60,7 @@ function checkPlayerCount(){
 }
 
 let playerbuttonStart = '<div class="col-lg-3" id="spielerbutton"><button type="button" class="btn btn-primary btn-lg btn-block playerbtn" data-toggle="button" id="';
-let playerbuttonID = '" onClick="select(this)"><span class="badge badge-primary badge-pill"></span>'; // style="background:rgb(106,180,70);"
+let playerbuttonID = '" onClick="select(this)"><span class="badge badge-light float-left"></span>'; // style="background:rgb(106,180,70);"
 let playerbuttonEnd = '</button></div>';
 
 function createPlayerButton(id, name) {
@@ -82,9 +83,17 @@ $("#myButtons :input").change(function () {
 $("#neuerSpieler").click(function (e) {
     e.preventDefault();
     person.name = $("#spieler-name").val();
-    person.status = 'inaktiv';
-    createPlayer();
+    if (person.name.length < 3){
+        alert("Bitte mehr als 3 Zeichen eingeben");
+    } else {
+        person.status = 'inaktiv';
+        createPlayer();
+    }
 });
+
+$('#spielerModal').on('hidden.bs.modal', function(e) {
+    $(this).find("input,textarea,select").val('').end();
+  });
 
 function createPlayer() {
     $.ajax({
@@ -159,7 +168,7 @@ function select(btn) {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                $("#" + result.id + " .badge.badge-primary.badge-pill").text(result.order);
+                $("#" + result.id + " .badge.badge-light").text(result.order);
                 $("#" + result.id).attr("disabled", true);
             }
         })
@@ -174,7 +183,7 @@ function reset() {
         success: function (result) {
             $("#startGame").attr("disabled", true);
             $("#zuruecksetzen").attr("disabled", true);
-            $(".playerbtn .badge.badge-primary.badge-pill").text('');
+            $(".playerbtn .badge.badge-light").text('');
             $(".playerbtn").attr("disabled", false);
             $(".playerbtn").removeClass("active");
         }

@@ -10,17 +10,19 @@ $(document).ready(function () {
     });
 });
 
-function updateList(){
+function updateList(playerid){
     $.when(getActive()).done(function (data) {
         $.each(data, function (index) {
-            order = data[index].order;
-            score = data[index].score;
-            score1 = score[score.length-3];
-            score2 = score[score.length-2];
-            score3 = score[score.length-1];
-            $("#" + order + "-score-1").html(score1);
-            $("#" + order + "-score-2").html(score2);
-            $("#" + order + "-score-3").html(score3);
+            if (data[index].id != playerid){
+                order = data[index].order;
+                score = data[index].score;
+                score1 = score[score.length-3];
+                score2 = score[score.length-2];
+                score3 = score[score.length-1];
+                $("#" + order + "-score-1").html(score1);
+                $("#" + order + "-score-2").html(score2);
+                $("#" + order + "-score-3").html(score3);
+            }
         });
     });
 }
@@ -48,13 +50,13 @@ var person = {
     score3: ''
 };
 
-list1='<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col" id="list-player-name">';
-list2='</div>|<div class="col text-center" id="';
-list3='-score-1" style="padding: 0;"></div>|<div class="col text-center" id="';
-list4='-score-2" style="padding: 0;"></div>|<div class="col text-center" id="';
-list5='-score-3" style="padding: 0;"></div>|<div class="col" id="';
+list1='<li class="list-group-item d-flex justify-content-between align-items-center" style="padding-left: 5px; padding-right: 5px;"><div class="col-sm-6" id="list-player-name" style="padding-left: 0px;">';
+list2='</div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
+list3='-score-1">-</span></div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
+list4='-score-2">-</span></div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
+list5='-score-3">-</span></div><strong><div class="col-lg-3 text-center" id="';
 list6='-points" style="padding-right: 0;">';
-list7='</div></li>';
+list7='</div></strong></li>';
 
 function createPlayerList(player) {
     content = list1;
@@ -75,7 +77,7 @@ function createPlayerList(player) {
 
 function next(playerid) {
     console.log(playerid);
-    updateList();
+    updateList(playerid);
     var getUrl = "/api/player/" + playerid;
     $.ajax({
         url: getUrl,
@@ -104,6 +106,9 @@ function displayPoints(order, points, avg) {
     $("#punktzahl").html(points);
     $("#average").html(avg);
     $("#" + order + "-points").html(points);
+    $("#" + order + "-score-1").html("-");
+    $("#" + order + "-score-2").html("-");
+    $("#" + order + "-score-3").html("-");
 }
 
 function doubleActive() {
