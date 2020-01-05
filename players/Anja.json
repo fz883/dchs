@@ -1,10 +1,18 @@
 {
 	"id": 30,
 	"name": "Anja",
-	"status": "inaktiv",
+	"status": "aktiv",
 	"finished": "false",
-	"points": 501,
-	"score": null,
-	"avg": 0,
-	"order": 0
+	"points": 412,
+	"score": [
+		19,
+		13,
+		17,
+		19,
+		12,
+		9
+	],
+	"avg": 44.5,
+	"order": 1,
+	"tries": 3
 }

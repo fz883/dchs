@@ -17,6 +17,7 @@ type Player struct {
 	Score    []int   `json:"score"`
 	Average  float64 `json:"avg"`
 	Order    int     `json:"order"`
+	Tries    int     `json:"tries"`
 }
 
 type GameData struct {
@@ -36,6 +37,7 @@ func initGame() {
 		item.Order = 0
 		item.Average = 0
 		item.Score = nil
+		item.Tries = 0
 		db.Write("players", item.Name, item)
 	}
 	gameData.PlayerLoad = 0

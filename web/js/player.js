@@ -17,6 +17,7 @@ var person = {
 };
 
 var playercount = 0;
+var activecount = 0;
 var deletemode = 0;
 
 function setDelete(){
@@ -158,7 +159,11 @@ function select(btn) {
         $.when(deleteCall(deleteUrl)).done(function (data) {
             reload();
         });
-    } else {
+    } else {       
+        if (activecount >= 12){
+            alert("Maximale Spielerzahl erreicht!");
+            return;
+        }
         $("#startGame").attr("disabled", false);
         $("#zuruecksetzen").attr("disabled", false);
         var postUrl = "/api/player/select/" + btn.id;
@@ -170,6 +175,8 @@ function select(btn) {
             success: function (result) {
                 $("#" + result.id + " .badge.badge-light").text(result.order);
                 $("#" + result.id).attr("disabled", true);
+                activecount += 1;
+                console.log(activecount);
             }
         })
     }
@@ -181,6 +188,7 @@ function reset() {
         type: "POST",
         url: resetUrl,
         success: function (result) {
+            activecount = 0;
             $("#startGame").attr("disabled", true);
             $("#zuruecksetzen").attr("disabled", true);
             $(".playerbtn .badge.badge-light").text('');

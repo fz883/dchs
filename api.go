@@ -13,7 +13,6 @@ import (
 )
 
 func player(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getPlayer")
 	w.Header().Set("Content-Type", "application/json")
 	readPlayers()
 	playerID, err := strconv.Atoi(path.Base(r.URL.Path))
@@ -21,7 +20,6 @@ func player(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	for _, p := range players {
-		fmt.Println("Want: ", playerID, " Got: ", p.Name, " ", p.ID)
 		if p.ID == playerID {
 			fmt.Println(p)
 			json.NewEncoder(w).Encode(p)
@@ -48,14 +46,12 @@ func delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func allplayers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getPlayers")
 	w.Header().Set("Content-Type", "application/json")
 	readPlayers()
 	json.NewEncoder(w).Encode(players)
 }
 
 func activePlayers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getPlayers")
 	w.Header().Set("Content-Type", "application/json")
 	readPlayers()
 	var tmpPlayers []Player
@@ -107,6 +103,7 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 	var tmpPlayer Player
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&tmpPlayer)
+	fmt.Println("Tempplayer: ", tmpPlayer)
 	if err != nil {
 		panic(err)
 	}
@@ -116,16 +113,16 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 			p.Score = append(p.Score, p.Points-tmpPlayer.Points)
 			//no score
 			if p.Points < tmpPlayer.Points {
-				if len(p.Score)%3 == 0 {
+				if tmpPlayer.Tries == 3 {
 					p.Score = p.Score[:len(p.Score)-3]
 					p.Score = append(p.Score, 0)
 					p.Score = append(p.Score, 0)
 					p.Score = append(p.Score, 0)
-				} else if len(p.Score)%3 == 2 {
+				} else if tmpPlayer.Tries == 2 {
 					p.Score = p.Score[:len(p.Score)-2]
 					p.Score = append(p.Score, 0)
 					p.Score = append(p.Score, 0)
-				} else if len(p.Score)%3 == 1 {
+				} else {
 					p.Score = p.Score[:len(p.Score)-1]
 					p.Score = append(p.Score, 0)
 				}
@@ -137,6 +134,7 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 			if p.Points == 0 {
 				p.Finished = "true"
 			}
+			p.Tries = tmpPlayer.Tries
 			db.Write("players", p.Name, p)
 			json.NewEncoder(w).Encode(p)
 			break

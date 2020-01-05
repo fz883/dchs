@@ -10,6 +10,11 @@ $(document).ready(function () {
     });
 });
 
+
+// CountUp
+
+
+
 function updateList(playerid){
     $.when(getActive()).done(function (data) {
         $.each(data, function (index) {
@@ -19,9 +24,21 @@ function updateList(playerid){
                 score1 = score[score.length-3];
                 score2 = score[score.length-2];
                 score3 = score[score.length-1];
-                $("#" + order + "-score-1").html(score1);
-                $("#" + order + "-score-2").html(score2);
-                $("#" + order + "-score-3").html(score3);
+
+                if (data[index].tries === 1){
+                    $("#" + order + "-score-1").html(score3);
+                    $("#" + order + "-score-2").html("-");
+                    $("#" + order + "-score-3").html("-");
+                } else if (data[index].tries === 2){
+                    $("#" + order + "-score-1").html(score2);
+                    $("#" + order + "-score-2").html(score3);
+                    $("#" + order + "-score-3").html("-");
+                } else {
+                    $("#" + order + "-score-1").html(score1);
+                    $("#" + order + "-score-2").html(score2);
+                    $("#" + order + "-score-3").html(score3);
+                }
+                $("#" + order + "-points").html(data[index].points);
             }
         });
     });
@@ -47,7 +64,8 @@ var person = {
     points: '',
     score1: '',
     score2: '',
-    score3: ''
+    score3: '',
+    tries: ''
 };
 
 list1='<li class="list-group-item d-flex justify-content-between align-items-center" style="padding-left: 5px; padding-right: 5px;"><div class="col-sm-6" id="list-player-name" style="padding-left: 0px;">';
@@ -92,6 +110,7 @@ function next(playerid) {
                 person.score1 = '';
                 person.score2 = '';
                 person.score3 = '';
+                person.tries = 0;
                 displayPoints(returnedData.order, returnedData.points, returnedData.avg);
                 $("#spielername").html(returnedData.name);
                 $("#dart1").html("-");
@@ -103,7 +122,17 @@ function next(playerid) {
 };
 
 function displayPoints(order, points, avg) {
-    $("#punktzahl").html(points);
+    $('#punktzahl').each(function () {
+        var $this = $(this);
+        jQuery({ Counter: $this.text() }).animate({ Counter: points }, {
+          duration: 1000,
+          easing: 'swing',
+          step: function () {
+            $this.text(Math.round(this.Counter));
+          }
+        });
+    });
+    //$("").html(points);
     $("#average").html(avg);
     $("#" + order + "-points").html(points);
     $("#" + order + "-score-1").html("-");
@@ -139,6 +168,7 @@ function points(btn) {
 
     // if double --> double = 2 // Triple
     totalscore = (btn.value * double * triple);
+    person.tries += 1;
 
     if (((person.points - totalscore) > 1) || (((person.points - totalscore) === 0) && (double == 2))) {
         person.points -= totalscore;
@@ -212,6 +242,9 @@ function callNext() {
                 gameFinished = false;
                 return gameFinished;
             }
+
+            
+
         });
         if (gameFinished) {
             console.log("End of game");

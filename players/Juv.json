@@ -1,24 +1,11 @@
 {
 	"id": 19,
 	"name": "Juv",
-	"status": "aktiv",
+	"status": "inaktiv",
 	"finished": "false",
-	"points": 53,
-	"score": [
-		25,
-		5,
-		11,
-		11,
-		14,
-		16,
-		6,
-		60,
-		60,
-		60,
-		60,
-		60,
-		60
-	],
-	"avg": 103.38,
-	"order": 2
+	"points": 501,
+	"score": null,
+	"avg": 0,
+	"order": 0,
+	"tries": 0
 }
