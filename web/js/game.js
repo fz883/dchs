@@ -1,22 +1,86 @@
 $(document).ready(function () {
-    $.when(getActive()).done(function (data) {
+    $.when(getPlayers()).done(function (data) {
         $.each(data, function (index) {
-            createPlayerList(data[index]);
-            playerlist.push(data[index].id);
-            playercount += 1;
+            if (data[index].active == true){
+                createPlayerList(data[index]);
+                playerlist.push(data[index].id);
+                playercount += 1;
+            }
         });
         $("#newsticker").html("Newsticker: ");
         next(playerlist[index]);
     });
 });
 
+list1='<li class="list-group-item d-flex justify-content-between align-items-center" style="padding-left: 5px; padding-right: 5px;"><div class="col-sm-6" id="list-player-name" style="padding-left: 0px;">';
+list2='</div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
+list3='-score-1">-</span></div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
+list4='-score-2">-</span></div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
+list5='-score-3">-</span></div><strong><div class="col-lg-3 text-center" id="';
+list6='-points" style="padding-right: 0;">';
+list7='</div></strong></li>';
 
-// CountUp
+function createPlayerList(player) {
+    content = list1;
+    content += player.name;
+    content += list2;
+    content += player.order;
+    content += list3;
+    content += player.order;
+    content += list4;
+    content += player.order;
+    content += list5;
+    content += player.order;
+    content += list6;
+    content += player.points;
+    content += list7;
+    $('#scorelist').append(content);
+};
+
+var playercount = 0;
+var index = 0;
+var playerlist = [];
+var double = 1;
+var triple = 1;
+
+var person = {
+    name: '',
+    id: '',
+    points: '',
+    score1: '',
+    score2: '',
+    score3: '',
+    tries: ''
+};
 
 
+function doubleActive() {
+    if (double === 2) {
+        double = 1;
+        $("#doublebtn").removeClass("active");
+        $('#triplebtn').attr("disabled", false);
+    } else {
+        double = 2;
+        $('#triplebtn').attr("disabled", true);
+    }
+}
 
+function tripleActive() {
+    if (triple === 3){
+        triple = 1;
+        $("#triplebtn").removeClass("active");
+        $('#pointbtn[value="25"]').attr("disabled", false);
+        $('#doublebtn').attr("disabled", false);
+    } else{
+        triple = 3;
+        $('#pointbtn[value="25"]').attr("disabled", true);
+        $('#doublebtn').attr("disabled", true);
+    }
+}
+
+/// ok but player
 function updateList(playerid){
-    $.when(getActive()).done(function (data) {
+    $.when(getPlayers()).done(function (data) {
         $.each(data, function (index) {
             if (data[index].id != playerid){
                 order = data[index].order;
@@ -44,54 +108,16 @@ function updateList(playerid){
     });
 }
 
-function getActive() {
+function getPlayers() {
     return $.ajax({
-        url: "/api/active",
+        url: "/api/player",
     });
 };
 
 
-var playercount = 0;
-var index = 0;
-var playerlist = [];
-var double = 1;
-var triple = 1;
 
 
-var person = {
-    name: '',
-    id: '',
-    points: '',
-    score1: '',
-    score2: '',
-    score3: '',
-    tries: ''
-};
 
-list1='<li class="list-group-item d-flex justify-content-between align-items-center" style="padding-left: 5px; padding-right: 5px;"><div class="col-sm-6" id="list-player-name" style="padding-left: 0px;">';
-list2='</div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
-list3='-score-1">-</span></div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
-list4='-score-2">-</span></div><div class="col-lg-1 text-center" style="padding: 0;"><span class="badge badge-primary" id="';
-list5='-score-3">-</span></div><strong><div class="col-lg-3 text-center" id="';
-list6='-points" style="padding-right: 0;">';
-list7='</div></strong></li>';
-
-function createPlayerList(player) {
-    content = list1;
-    content += player.name;
-    content += list2;
-    content += player.order;
-    content += list3;
-    content += player.order;
-    content += list4;
-    content += player.order;
-    content += list5;
-    content += player.order;
-    content += list6;
-    content += player.points;
-    content += list7;
-    $('#scorelist').append(content);
-};
 
 function next(playerid) {
     console.log(playerid);
@@ -140,27 +166,17 @@ function displayPoints(order, points, avg) {
     $("#" + order + "-score-3").html("-");
 }
 
-function doubleActive() {
-    if (double === 2) {
-        double = 1;
-        $("#doublebtn").removeClass("active");
-        $('#triplebtn').attr("disabled", false);
-    } else {
-        double = 2;
-        $('#triplebtn').attr("disabled", true);
-    }
-}
 
-function tripleActive() {
-    if (triple === 3){
-        triple = 1;
-        $("#triplebtn").removeClass("active");
-        $('#pointbtn[value="25"]').attr("disabled", false);
-        $('#doublebtn').attr("disabled", false);
-    } else{
-        triple = 3;
-        $('#pointbtn[value="25"]').attr("disabled", true);
-        $('#doublebtn').attr("disabled", true);
+function oopsImadeAmistake(){
+    if (person.score3 != '') {
+        person.points = person.points + person.score3;
+        person.score3 = '';
+    } else if (person.score2 != '') {
+        person.points = person.points + person.score2;
+        person.score2 = '';
+    } else if (person.score1 != '') {
+        person.points = person.points + person.score1;
+        person.score1 = '';
     }
 }
 
@@ -236,7 +252,7 @@ function callNext() {
         index = 0;
     }
     var gameFinished = true;
-    $.when(getActive()).done(function (data) {
+    $.when(getPlayers()).done(function (data) {
         $.each(data, function (index) {
             if (data[index].finished == "false") {
                 gameFinished = false;
@@ -255,17 +271,3 @@ function callNext() {
 
 }
 
-
-
-
-//API FUNCTIONS
-
-/*function select(btn) {
-    let returnedData;
-    $.get("/api/player/" + btn.id, function(data) {
-        returnedData = data;
-        createPlayerList(returnedData.name);
-    });
-
-    $("#"+ btn.id).attr("disabled", true);
-};*/

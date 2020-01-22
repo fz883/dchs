@@ -11,8 +11,8 @@ import (
 type Player struct {
 	ID       int     `json:"id"`
 	Name     string  `json:"name"`
-	Status   string  `json:"status"`
-	Finished string  `json:"finished"`
+	Active   bool    `json:"active"`
+	Finished bool    `json:"finished"`
 	Points   int     `json:"points"`
 	Score    []int   `json:"score"`
 	Average  float64 `json:"avg"`
@@ -32,8 +32,8 @@ func initGame() {
 	readPlayers()
 	for _, item := range players {
 		item.Points = 501
-		item.Status = "inaktiv"
-		item.Finished = "false"
+		item.Active = false
+		item.Finished = false
 		item.Order = 0
 		item.Average = 0
 		item.Score = nil
@@ -60,8 +60,9 @@ func main() {
 	r.HandleFunc("/api/switchGame", switchGame).Methods("GET")
 	r.HandleFunc("/api/player", allplayers).Methods("GET")
 	r.HandleFunc("/api/player/{id}", player).Methods("GET")
+	r.HandleFunc("/api/player/update/", update).Methods("POST")
 	r.HandleFunc("/api/active", activePlayers).Methods("GET")
-	r.HandleFunc("/api/player/select/{id}", switchActive).Methods("POST")
+
 	r.HandleFunc("/api/player", createPlayer).Methods("POST")
 	r.HandleFunc("/api/player/points", setPoints).Methods("POST")
 	r.HandleFunc("/api/reset", resetGame).Methods("POST")

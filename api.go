@@ -56,7 +56,7 @@ func activePlayers(w http.ResponseWriter, r *http.Request) {
 	readPlayers()
 	var tmpPlayers []Player
 	for _, p := range players {
-		if p.Status == "aktiv" {
+		if p.Active == true {
 			tmpPlayers = append(tmpPlayers, p)
 		}
 	}
@@ -132,7 +132,7 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 			p.Points = tmpPlayer.Points
 			p.Average = math.Round((float64((gameData.GameMode-p.Points))/float64(len(p.Score))*float64(3.00))*100) / 100
 			if p.Points == 0 {
-				p.Finished = "true"
+				p.Finished = true
 			}
 			p.Tries = tmpPlayer.Tries
 			db.Write("players", p.Name, p)
@@ -180,28 +180,18 @@ func setID(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func switchActive(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("switchActive")
+func update(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API UPDATE")
 	w.Header().Set("Content-Type", "application/json")
-	playerID, err := strconv.Atoi(path.Base(r.URL.Path))
+	var tmpPlayer Player
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&tmpPlayer)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
-	fmt.Println(path.Base(r.URL.Path))
-	fmt.Println("PlayerID: ", playerID)
 	readPlayers()
-	for _, p := range players {
-		if p.ID == playerID {
-			if p.Status == "inaktiv" {
-				p.Status = "aktiv"
-				gameData.PlayerLoad++
-				p.Order = gameData.PlayerLoad
-			} else {
-				p.Status = "inaktiv"
-			}
-			db.Write("players", p.Name, p)
-			json.NewEncoder(w).Encode(p)
-			break
-		}
+	if err := db.Write("players", tmpPlayer.Name, tmpPlayer); err != nil {
+		fmt.Println("Error", err)
 	}
+	json.NewEncoder(w).Encode(tmpPlayer)
 }
