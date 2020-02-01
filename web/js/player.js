@@ -2,7 +2,7 @@ $(document).ready(function () {
     $("#startGame").attr("disabled", true);
     $("#zuruecksetzen").attr("disabled", true);
     $("#title").html("Spieler auswählen: ");
-    
+
     reset();
     reload();
 });
@@ -35,7 +35,7 @@ var deletemode = 0;
 var allPlayers;
 var order = 1;
 
-function setDelete(){
+function setDelete() {
     console.log(deletemode);
     if (deletemode === 0) {
         deletemode = 1;
@@ -49,7 +49,7 @@ function setDelete(){
     }
 }
 
-function reload(){
+function reload() {
     playercount = 0;
     $('#playerlist').empty();
     $.when(getPlayers()).done(function (data) {
@@ -68,7 +68,7 @@ function getPlayers() {
     });
 };
 
-function checkPlayerCount(){
+function checkPlayerCount() {
     if (playercount >= 20) {
         $("#newPlayer").attr("disabled", true);
     } else {
@@ -92,7 +92,7 @@ $("#myButtons :input").change(function () {
 $("#neuerSpieler").click(function (e) {
     e.preventDefault();
     person.name = $("#spieler-name").val();
-    if (person.name.length < 3){
+    if (person.name.length < 3) {
         alert("Bitte mehr als 3 Zeichen eingeben");
     } else {
         person.status = 'inaktiv';
@@ -120,33 +120,14 @@ function createPlayer() {
 };
 
 // empty value on modal open
-$('#spielerModal').on('hidden.bs.modal', function(e) {
+$('#spielerModal').on('hidden.bs.modal', function (e) {
     $(this).find("input,textarea,select").val('').end();
 });
-
-
-//unused
-function getPlayer(id) {
-    var getUrl = "/api/player/" + id;
-    res = false;
-    console.log("ajax get");
-    $.ajax({
-        url: getUrl,
-        success: function (result) {
-            window.person.name = result.name;
-            window.person.status = result.status;
-            window.person.points = result.points;
-            return true;
-        }
-    });
-    console.log(res);
-    return res;
-}
 
 function update() {
     console.log("update")
     console.log(person)
-    var postUrl = "/api/player/update/" + person.name;
+    var postUrl = "/api/update";
     $.ajax({
         type: "POST",
         url: postUrl,
@@ -156,51 +137,61 @@ function update() {
     })
 };
 
-function deleteCall(deleteUrl){
+function deleteCall(player) {
+    var deleteUrl = "/api/delete";
     return $.ajax({
+        type: "POST",
         url: deleteUrl,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(player),
     })
 }
 
 function select(btn) {
-    if (deletemode === 1){
+    //find selected player by btn.id
+    $.each(allPlayers, function (index) {
+        if (allPlayers[index].id == btn.id) {
+            player = allPlayers[index];
+        }
+    })
+    //deletebutton is pressed
+    //delete player instead of select this one
+    if (deletemode === 1) {
         console.log("Lösche Spieler " + btn.id);
-        var deleteUrl = "/api/delete/" + btn.id;
         setDelete();
-        $.when(deleteCall(deleteUrl)).done(function (data) {
+        $.when(deleteCall(player)).done(function (data) {
             reload();
         });
-    } else {       
-        if (activecount >= 12){
+    } else {
+        //player gets selected for the game
+        if (activecount >= 12) {
             alert("Maximale Spielerzahl erreicht!");
             return;
         }
         $("#startGame").attr("disabled", false);
         $("#zuruecksetzen").attr("disabled", false);
-        $.each(allPlayers, function (index) {
-            if (allPlayers[index].id == btn.id){
-                player = allPlayers[index];
-                player.active = true;
-                player.order = order;
-                var postUrl = "/api/player/update/";
-                $.ajax({
-                    type: "POST",
-                    url: postUrl,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: JSON.stringify(player),
-                    success: function (result) {
-                        $("#" + result.id + " .badge.badge-light").text(result.order);
-                        $("#" + result.id).attr("disabled", true);
-                        activecount += 1;
-                        order += 1;
-                        console.log(activecount);
-                    }
-                })
+
+        player.active = true;
+        player.order = order;
+        var postUrl = "/api/update";
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(player),
+            success: function (result) {
+                $("#" + result.id + " .badge.badge-light").text(result.order);
+                $("#" + result.id).attr("disabled", true);
+                activecount += 1;
+                order += 1;
+                console.log(activecount);
             }
-        });
+        })
     }
 };
+
 
 function reset() {
     var resetUrl = "/api/reset"
@@ -209,6 +200,7 @@ function reset() {
         url: resetUrl,
         success: function (result) {
             activecount = 0;
+            order = 1;
             $("#startGame").attr("disabled", true);
             $("#zuruecksetzen").attr("disabled", true);
             $(".playerbtn .badge.badge-light").text('');

@@ -31,29 +31,23 @@ func player(w http.ResponseWriter, r *http.Request) {
 func delete(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("delete Player")
 	w.Header().Set("Content-Type", "application/json")
-	readPlayers()
-	playerID, err := strconv.Atoi(path.Base(r.URL.Path))
+	var tmpPlayer Player
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&tmpPlayer)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
-	for _, p := range players {
-		if p.ID == playerID {
-			db.Delete("players", p.Name)
-			json.NewEncoder(w).Encode(p)
-			break
-		}
+	readPlayers()
+	if err := db.Delete("players", tmpPlayer.Name); err != nil {
+		fmt.Println("Error while deleting player", err)
 	}
+	json.NewEncoder(w).Encode(tmpPlayer)
 }
 
 func allplayers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	readPlayers()
-	json.NewEncoder(w).Encode(players)
-}
 
-func activePlayers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	readPlayers()
 	var tmpPlayers []Player
 	for _, p := range players {
 		if p.Active == true {
@@ -65,7 +59,7 @@ func activePlayers(w http.ResponseWriter, r *http.Request) {
 		return tmpPlayers[i].Order < tmpPlayers[j].Order
 	})
 
-	json.NewEncoder(w).Encode(tmpPlayers)
+	json.NewEncoder(w).Encode(players)
 }
 
 func createPlayer(w http.ResponseWriter, r *http.Request) {
