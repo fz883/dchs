@@ -9,15 +9,15 @@ import (
 )
 
 type Player struct {
-	ID       int     `json:"id"`
-	Name     string  `json:"name"`
-	Active   bool    `json:"active"`
-	Finished bool    `json:"finished"`
-	Points   int     `json:"points"`
-	Score    []int   `json:"score"`
-	Average  float64 `json:"avg"`
-	Order    int     `json:"order"`
-	Tries    int     `json:"tries"`
+	ID       int      `json:"id"`
+	Name     string   `json:"name"`
+	Active   bool     `json:"active"`
+	Finished bool     `json:"finished"`
+	Points   int      `json:"points"`
+	Score    [][3]int `json:"score"`
+	Average  float64  `json:"avg"`
+	Order    int      `json:"order"`
+	Tries    int      `json:"tries"`
 }
 
 type GameData struct {
@@ -63,7 +63,7 @@ func main() {
 	r.HandleFunc("/api/update", update).Methods("POST")
 
 	r.HandleFunc("/api/player", createPlayer).Methods("POST")
-	r.HandleFunc("/api/player/points", setPoints).Methods("POST")
+	//r.HandleFunc("/api/player/points", setPoints).Methods("POST")
 	r.HandleFunc("/api/reset", resetGame).Methods("POST")
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./web/")))
 

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math"
 	"net/http"
 	"path"
 	"sort"
@@ -50,16 +49,14 @@ func allplayers(w http.ResponseWriter, r *http.Request) {
 
 	var tmpPlayers []Player
 	for _, p := range players {
-		if p.Active == true {
-			tmpPlayers = append(tmpPlayers, p)
-		}
+		tmpPlayers = append(tmpPlayers, p)
 	}
 
 	sort.Slice(tmpPlayers, func(i, j int) bool {
 		return tmpPlayers[i].Order < tmpPlayers[j].Order
 	})
 
-	json.NewEncoder(w).Encode(players)
+	json.NewEncoder(w).Encode(tmpPlayers)
 }
 
 func createPlayer(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +88,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&player)
 }
 
-func setPoints(w http.ResponseWriter, r *http.Request) {
+/*func setPoints(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("set Points")
 	w.Header().Set("Content-Type", "application/json")
 	var tmpPlayer Player
@@ -134,7 +131,7 @@ func setPoints(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-}
+}*/
 
 func switchGame(w http.ResponseWriter, r *http.Request) {
 	if gameData.GameMode == 501 {

@@ -76,15 +76,12 @@ function checkPlayerCount() {
     }
 }
 
-
-
-// SPIEL ÄNDERN 
-// TODO
-
 $("#myButtons :input").change(function () {
-    $.ajax({
-        url: "/api/switchGame",
-    });
+    var value = $("input[name='options']:checked").val();
+    $.each(allPlayers, function (index) {
+        allPlayers[index].points = parseInt(value);
+        update(allPlayers[index]);
+    })
 });
 
 // NEUEN SPIELER ANLEGEN
@@ -124,14 +121,14 @@ $('#spielerModal').on('hidden.bs.modal', function (e) {
     $(this).find("input,textarea,select").val('').end();
 });
 
-function update() {
+function update(player) {
     console.log("update")
     console.log(person)
     var postUrl = "/api/update";
     $.ajax({
         type: "POST",
         url: postUrl,
-        data: JSON.stringify(person),
+        data: JSON.stringify(player),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
     })
