@@ -84,30 +84,34 @@ function updateList(playerid) {
                 $("#" + order + "-score-3").html("-");
             } else {
                 //when next round starts, show results of last round
-                if (typeof score[round] == 'undefined'){
-                    score1 = score[round-1][0];
-                    score2 = score[round-1][1];
-                    score3 = score[round-1][2];
+                if (typeof score[round] == 'undefined') {
+                    //check if player threw three darts..must atleast have one score
+
+                    score1 = score[round - 1][0];
+                    $("#" + order + "-score-1").html(score1);
+
+                    if (typeof score[round - 1][1] != 'undefined') {
+                        score2 = score[round - 1][1];
+                        $("#" + order + "-score-2").html(score2);
+                    } else {
+                        $("#" + order + "-score-2").html("-");
+                    }
+                    if (typeof score[round - 1][2] != 'undefined') {
+                        score3 = score[round - 1][2];
+                        $("#" + order + "-score-3").html(score3);
+                    } else {
+                        $("#" + order + "-score-3").html("-");
+                    }
+
                 } else {
                     score1 = score[round][0];
                     score2 = score[round][1];
                     score3 = score[round][2];
-                }
-
-
-                if (allPlayers[index].tries === 1) {
-                    $("#" + order + "-score-1").html(score3);
-                    $("#" + order + "-score-2").html("-");
-                    $("#" + order + "-score-3").html("-");
-                } else if (allPlayers[index].tries === 2) {
-                    $("#" + order + "-score-1").html(score2);
-                    $("#" + order + "-score-2").html(score3);
-                    $("#" + order + "-score-3").html("-");
-                } else {
                     $("#" + order + "-score-1").html(score1);
                     $("#" + order + "-score-2").html(score2);
                     $("#" + order + "-score-3").html(score3);
                 }
+
                 $("#" + order + "-points").html(allPlayers[index].points);
             }
         }
@@ -126,11 +130,15 @@ function next(playerid) {
         allPlayers = data;
         $.each(data, function (index) {
             //check if at least two player are not finished
-            if (data[index].finished == false) {
+            if (data[index].active == true && data[index].finished == false) {
                 stillPlaying += 1;
             }
         });
-        if (stillPlaying < 2) {
+        console.log("Stillplaying: " + stillPlaying);
+        //if (stillPlaying < 2) {
+            //ToDo Implement Question Feierabend?
+        //} else 
+        if (stillPlaying == 0){
             console.log("End of game");
         } else {
             $.each(allPlayers, function (index) {
@@ -139,12 +147,13 @@ function next(playerid) {
                 }
             })
             if (currentplayer.finished == true) {
+                console.log("currentplayer finished");
                 index += 1;
                 if (index > playercount - 1) {
                     index = 0;
                     round += 1;
                 }
-                next(index);
+                next(playerlist[index]);
             } else {
                 console.log(currentplayer.name + " ist an der Reihe");
                 updateList(playerid);
@@ -211,34 +220,79 @@ function points(btn) {
     totalscore = (btn.value * double * triple);
     currentplayer.tries += 1;
     scoredthree = false;
+    var dart = 1;
+    
+    console.log(currentplayer.score[round][0] + " " + typeof currentplayer.score[round][0]);
+    console.log(currentplayer.score[round][1] + " " + typeof currentplayer.score[round][1]);
+    console.log(currentplayer.score[round][2] + " " + typeof currentplayer.score[round][2]);
+    
+    //set score for current throw
+    if (typeof currentplayer.score[round][0] == 'undefined') {
+        currentplayer.score[round][0] = parseInt(totalscore);
+    } else if (typeof currentplayer.score[round][1] == 'undefined') {
+        currentplayer.score[round][1] = parseInt(totalscore);
+        dart = 2;
+    } else if (typeof currentplayer.score[round][2] == 'undefined') {
+        currentplayer.score[round][2] = parseInt(totalscore);
+        dart = 3;
+    }
 
-    if (((currentplayer.points - totalscore) > 1) || (((currentplayer.points - totalscore) === 0) && (double == 2))) {
-        currentplayer.points -= totalscore;
-        if (typeof currentplayer.score[round][0] == 'undefined') {
-            currentplayer.score[round][0] = parseInt(totalscore);
-            $("#dart1").html(totalscore);
-            $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem ersten Dart!")
+    currentplayer.points -= totalscore;
 
-        } else if (typeof currentplayer.score[round][1] == 'undefined') {
-            currentplayer.score[round][1] = parseInt(totalscore);
-            $("#dart2").html(totalscore);
-            $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem zweiten Dart!")
-        } else if (typeof currentplayer.score[round][2] == 'undefined') {
-            currentplayer.score[round][2] = parseInt(totalscore);
-            $("#dart3").html(totalscore);
-            $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem dritten Dart!")
-            scoredthree = true;
+    //Check if throw was valid
+    if ((currentplayer.points > 1) || ((currentplayer.points == 0) && (double == 2))) {
+
+        
+
+        switch (dart) {
+            case 1:
+                $("#dart1").html(totalscore);
+                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem ersten Dart!" + round);
+                break;
+            case 2:
+                $("#dart2").html(totalscore);
+                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem zweiten Dart!" + round);
+                break;
+            case 3:
+                $("#dart3").html(totalscore);
+                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem dritten Dart!" + round);
+                scoredthree = true;
+                break;
         }
 
-        if (currentplayer.points == 0){
+        console.log(currentplayer.points);
+        if (currentplayer.points == 0) {
             currentplayer.finished = true;
         }
+
     } else { //if ((person.points - totalscore) <= 1) && double == 1
 
-        currentplayer.points += currentplayer.score[round][0];
-        currentplayer.points += currentplayer.score[round][1];
-        currentplayer.points += currentplayer.score[round][2];
-        //hacky hack....
+        console.log(currentplayer.score[round][0] + " " + typeof currentplayer.score[round][0]);
+        console.log(currentplayer.score[round][1] + " " + typeof currentplayer.score[round][1]);
+        console.log(currentplayer.score[round][2] + " " + typeof currentplayer.score[round][2]);
+
+        switch (dart) {
+            case 1:
+                currentplayer.points += currentplayer.score[round][0];
+                currentplayer.score[round][0] = 0;
+                break;
+            case 2:
+                currentplayer.points += currentplayer.score[round][0];
+                currentplayer.points += currentplayer.score[round][1];
+                currentplayer.score[round][0] = 0;
+                currentplayer.score[round][1] = 0;
+                break;
+            case 3:
+                currentplayer.points += currentplayer.score[round][0];
+                currentplayer.points += currentplayer.score[round][1];
+                currentplayer.points += currentplayer.score[round][2];
+                currentplayer.score[round][0] = 0;
+                currentplayer.score[round][1] = 0;
+                currentplayer.score[round][2] = 0;
+                break;
+        }
+
+        //hacky hack....TODO: Check if necessary
         currentplayer.points = parseInt(currentplayer.points);
         console.log(currentplayer.points);
         $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte! No Score!")
@@ -272,8 +326,6 @@ function points(btn) {
             index = 0;
             round += 1;
         }
-        console.log("Index ist: " + index);
-        console.log(playerlist);
         next(playerlist[index]);
     }
 }

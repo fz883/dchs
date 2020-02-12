@@ -3,15 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
-	"path"
 	"sort"
-	"strconv"
 	"strings"
 )
 
-func player(w http.ResponseWriter, r *http.Request) {
+/*func player(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	readPlayers()
 	playerID, err := strconv.Atoi(path.Base(r.URL.Path))
@@ -25,7 +22,7 @@ func player(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-}
+}*/
 
 func delete(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("delete Player")
@@ -64,9 +61,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var player Player
 	json.NewDecoder(r.Body).Decode(&player)
-	fmt.Println(player.Name)
 	player.Name = strings.Title(strings.ToLower(player.Name))
-	fmt.Println(player.Name)
 	readPlayers()
 	//return if player exists
 	for _, f := range players {
@@ -83,7 +78,6 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	player.ID = id + 1
 
-	player.Points = gameData.GameMode
 	db.Write("players", player.Name, player)
 	json.NewEncoder(w).Encode(&player)
 }
@@ -133,7 +127,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 }*/
 
-func switchGame(w http.ResponseWriter, r *http.Request) {
+/*func switchGame(w http.ResponseWriter, r *http.Request) {
 	if gameData.GameMode == 501 {
 		gameData.GameMode = 301
 	} else {
@@ -145,14 +139,14 @@ func switchGame(w http.ResponseWriter, r *http.Request) {
 		p.Points = gameData.GameMode
 		db.Write("players", p.Name, p)
 	}
-}
+}*/
 
 func resetGame(w http.ResponseWriter, r *http.Request) {
 	initGame()
 
 }
 
-func setID(w http.ResponseWriter, r *http.Request) {
+/*func setID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("setID")
 	w.Header().Set("Content-Type", "application/json")
 	var tmpPlayer Player
@@ -169,7 +163,7 @@ func setID(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-}
+}*/
 
 func update(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API UPDATE")

@@ -20,12 +20,6 @@ type Player struct {
 	Tries    int      `json:"tries"`
 }
 
-type GameData struct {
-	PlayerLoad int
-	GameMode   int
-}
-
-var gameData GameData
 var players []Player
 
 func initGame() {
@@ -40,8 +34,6 @@ func initGame() {
 		item.Tries = 0
 		db.Write("players", item.Name, item)
 	}
-	gameData.PlayerLoad = 0
-	gameData.GameMode = 501
 }
 
 func main() {
@@ -57,9 +49,9 @@ func main() {
 
 	//r.HandleFunc("/<your-url>", <function-name>).Methods("<method>")
 	r.HandleFunc("/api/delete", delete).Methods("POST")
-	r.HandleFunc("/api/switchGame", switchGame).Methods("GET")
+	//r.HandleFunc("/api/switchGame", switchGame).Methods("GET")
 	r.HandleFunc("/api/player", allplayers).Methods("GET")
-	r.HandleFunc("/api/player/{id}", player).Methods("GET")
+	//r.HandleFunc("/api/player/{id}", player).Methods("GET")
 	r.HandleFunc("/api/update", update).Methods("POST")
 
 	r.HandleFunc("/api/player", createPlayer).Methods("POST")

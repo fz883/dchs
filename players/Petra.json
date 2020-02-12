@@ -2,36 +2,26 @@
 	"id": 3,
 	"name": "Petra",
 	"active": true,
-	"finished": true,
-	"points": 0,
+	"finished": false,
+	"points": 70,
 	"score": [
 		[
-			25,
-			25,
-			25
+			60,
+			60,
+			60
 		],
 		[
-			25,
-			25,
-			25
-		],
-		[
-			25,
-			25,
-			25
-		],
-		[
-			25,
-			25,
+			4,
+			12,
 			6
 		],
 		[
-			20,
-			0,
-			0
+			13,
+			11,
+			5
 		]
 	],
 	"avg": 0,
-	"order": 1,
-	"tries": 13
+	"order": 3,
+	"tries": 9
 }

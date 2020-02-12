@@ -23,12 +23,10 @@ function createPlayerButton(id, name) {
 var person = {
     name: '',
     status: '',
-    finished: '',
-    id: '',
     points: '',
-    avg: '',
 };
 
+var gamemode = 501;
 var playercount = 0;
 var activecount = 0;
 var deletemode = 0;
@@ -77,9 +75,10 @@ function checkPlayerCount() {
 }
 
 $("#myButtons :input").change(function () {
-    var value = $("input[name='options']:checked").val();
+    gamemode = $("input[name='options']:checked").val();
+    gamemode = parseInt(gamemode);
     $.each(allPlayers, function (index) {
-        allPlayers[index].points = parseInt(value);
+        allPlayers[index].points = gamemode;
         update(allPlayers[index]);
     })
 });
@@ -93,6 +92,7 @@ $("#neuerSpieler").click(function (e) {
         alert("Bitte mehr als 3 Zeichen eingeben");
     } else {
         person.status = 'inaktiv';
+        person.points = gamemode;
         createPlayer();
     }
 });
