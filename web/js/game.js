@@ -247,15 +247,15 @@ function points(btn) {
         switch (dart) {
             case 1:
                 $("#dart1").html(totalscore);
-                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem ersten Dart!" + round);
+                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem ersten Dart!");
                 break;
             case 2:
                 $("#dart2").html(totalscore);
-                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem zweiten Dart!" + round);
+                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem zweiten Dart!");
                 break;
             case 3:
                 $("#dart3").html(totalscore);
-                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem dritten Dart!" + round);
+                $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem dritten Dart!");
                 scoredthree = true;
                 break;
         }

@@ -3,25 +3,25 @@
 	"name": "Petra",
 	"active": true,
 	"finished": false,
-	"points": 70,
+	"points": 54,
 	"score": [
+		[
+			12,
+			17,
+			5
+		],
+		[
+			16,
+			11,
+			6
+		],
 		[
 			60,
 			60,
 			60
-		],
-		[
-			4,
-			12,
-			6
-		],
-		[
-			13,
-			11,
-			5
 		]
 	],
 	"avg": 0,
-	"order": 3,
+	"order": 1,
 	"tries": 9
 }

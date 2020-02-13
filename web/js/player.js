@@ -3,7 +3,6 @@ $(document).ready(function () {
     $("#zuruecksetzen").attr("disabled", true);
     $("#title").html("Spieler auswählen: ");
 
-    reset();
     reload();
 });
 
