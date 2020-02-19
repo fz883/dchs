@@ -143,7 +143,6 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 
 func resetGame(w http.ResponseWriter, r *http.Request) {
 	initGame()
-
 }
 
 /*func setID(w http.ResponseWriter, r *http.Request) {

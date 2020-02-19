@@ -133,19 +133,12 @@ function next(playerid) {
             if (data[index].active == true && data[index].finished == false) {
                 stillPlaying += 1;
             }
+            if (allPlayers[index].id == playerid) {
+                currentplayer = allPlayers[index];
+            }
         });
         console.log("Stillplaying: " + stillPlaying);
-        //if (stillPlaying < 2) {
-        //ToDo Implement Question Feierabend?
-        //} else 
-        if (stillPlaying == 0) {
-            console.log("End of game");
-        } else {
-            $.each(allPlayers, function (index) {
-                if (allPlayers[index].id == playerid) {
-                    currentplayer = allPlayers[index];
-                }
-            })
+        if (!gameFinished(stillPlaying)) {
             if (currentplayer.finished == true) {
                 console.log("currentplayer finished");
                 index += 1;
@@ -173,8 +166,21 @@ function next(playerid) {
                 $("#dart2").html("-");
                 $("#dart3").html("-");
             }
+
+        } else {
+            console.log("Now we are done!!");
         }
     });
+}
+
+function gameFinished(stillPlaying) {
+    if (stillPlaying == 0) {
+        return true
+    }
+    if (stillPlaying == 1 && playercount > 1) {
+        return true
+    }
+    return false
 }
 
 //TODO: FIX BUG /// WRONG POINTS DISPLAYED
@@ -262,6 +268,7 @@ function points(btn) {
         console.log(currentplayer.points);
         if (currentplayer.points == 0) {
             currentplayer.finished = true;
+            scoredthree = true;
         }
 
     } else { //if ((person.points - totalscore) <= 1) && double == 1
