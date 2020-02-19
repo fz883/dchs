@@ -7,6 +7,7 @@ $(document).ready(function () {
                 playercount += 1;
             }
         });
+        gamemode = data[index].points;
         $("#newsticker").html("Newsticker: ");
         next(playerlist[0]);
     });
@@ -37,6 +38,7 @@ function createPlayerList(player) {
     $('#scorelist').append(content);
 };
 
+var gamemode;
 var playercount = 0;
 var index = 0;
 var playerlist = [];
@@ -351,7 +353,7 @@ function calcAvg() {
     var avg;
 
     //Math.round((num + Number.EPSILON) * 100) / 100
-    avg = Math.round(((((501 - currentplayer.points) / currentplayer.tries) * 3) + Number.EPSILON) * 100) / 100;
+    avg = Math.round(((((gamemode - currentplayer.points) / currentplayer.tries) * 3) + Number.EPSILON) * 100) / 100;
     return avg;
 }
 
