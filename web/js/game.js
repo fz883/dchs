@@ -136,9 +136,9 @@ function next(playerid) {
         });
         console.log("Stillplaying: " + stillPlaying);
         //if (stillPlaying < 2) {
-            //ToDo Implement Question Feierabend?
+        //ToDo Implement Question Feierabend?
         //} else 
-        if (stillPlaying == 0){
+        if (stillPlaying == 0) {
             console.log("End of game");
         } else {
             $.each(allPlayers, function (index) {
@@ -218,14 +218,13 @@ function points(btn) {
 
     // if double --> double = 2 // Triple
     totalscore = (btn.value * double * triple);
-    currentplayer.tries += 1;
     scoredthree = false;
     var dart = 1;
-    
+
     console.log(currentplayer.score[round][0] + " " + typeof currentplayer.score[round][0]);
     console.log(currentplayer.score[round][1] + " " + typeof currentplayer.score[round][1]);
     console.log(currentplayer.score[round][2] + " " + typeof currentplayer.score[round][2]);
-    
+
     //set score for current throw
     if (typeof currentplayer.score[round][0] == 'undefined') {
         currentplayer.score[round][0] = parseInt(totalscore);
@@ -241,8 +240,8 @@ function points(btn) {
 
     //Check if throw was valid
     if ((currentplayer.points > 1) || ((currentplayer.points == 0) && (double == 2))) {
+        currentplayer.tries += 1;
 
-        
 
         switch (dart) {
             case 1:
@@ -299,6 +298,8 @@ function points(btn) {
         scoredthree = true;
     }
 
+    currentplayer.avg = calcAvg();
+
     var postUrl = "/api/update";
     $.ajax({
         type: "POST",
@@ -328,6 +329,14 @@ function points(btn) {
         }
         next(playerlist[index]);
     }
+}
+
+function calcAvg() {
+    var avg;
+
+    //Math.round((num + Number.EPSILON) * 100) / 100
+    avg = Math.round(((((501 - currentplayer.points) / currentplayer.tries) * 3) + Number.EPSILON) * 100) / 100;
+    return avg;
 }
 
 

@@ -17,8 +17,15 @@ type Player struct {
 	Score    [][3]int `json:"score"`
 	Average  float64  `json:"avg"`
 	Order    int      `json:"order"`
-	Tries    int      `json:"tries"`
+	Tries    int      `json:"tries"` //ToDo: Wahrscheinlich nicht benutzt
 }
+
+/*type GameData struct {
+	Round  int  `json:"round"`
+	Double bool `json:"double"`
+	Triple bool `json:"triple"`
+}
+var gameData GameData*/
 
 var players []Player
 
@@ -53,6 +60,8 @@ func main() {
 	r.HandleFunc("/api/player", allplayers).Methods("GET")
 	//r.HandleFunc("/api/player/{id}", player).Methods("GET")
 	r.HandleFunc("/api/update", update).Methods("POST")
+	//Save for later
+	//r.HandleFunc("/api/gamedata", updateGameData).Methods("POST")
 
 	r.HandleFunc("/api/player", createPlayer).Methods("POST")
 	//r.HandleFunc("/api/player/points", setPoints).Methods("POST")

@@ -180,3 +180,20 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(tmpPlayer)
 }
+
+/* ToDo: Save for later...maybe calc points in backend?
+func updateGameData(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GameData UPDATE")
+	w.Header().Set("Content-Type", "application/json")
+	var gd GameData
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&gd)
+	if err != nil {
+		panic(err)
+	}
+	gameData.Double = gd.Double
+	gameData.Triple = gd.Triple
+	gameData.Round = gd.Round
+	// Do Magic
+	json.NewEncoder(w).Encode(gd)
+}*/
