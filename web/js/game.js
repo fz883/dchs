@@ -312,16 +312,15 @@ function points(btn) {
         displayPoints(currentplayer.order, currentplayer.points, currentplayer.avg);
     }
 
-    double = 1;
-    $("#doublebtn").removeClass("active");
-    $('#doublebtn').attr("disabled", false);
-    triple = 1;
-    $("#triplebtn").removeClass("active");
-    $('#triplebtn').attr("disabled", false);
-    $('#pointbtn[value="25"]').attr("disabled", false);
+    resetMultiplier();
 
+    checkFinished();
+
+}
+
+function checkFinished(scoredthree) {
     if (scoredthree || currentplayer.points == 0) {
-        console.log("Neeext");
+        console.log("Player finished, Loading next");
         index += 1;
         if (index > playercount - 1) {
             index = 0;
@@ -329,6 +328,16 @@ function points(btn) {
         }
         next(playerlist[index]);
     }
+}
+
+function resetMultiplier() {
+    double = 1;
+    $("#doublebtn").removeClass("active");
+    $('#doublebtn').attr("disabled", false);
+    triple = 1;
+    $("#triplebtn").removeClass("active");
+    $('#triplebtn').attr("disabled", false);
+    $('#pointbtn[value="25"]').attr("disabled", false);
 }
 
 function calcAvg() {
