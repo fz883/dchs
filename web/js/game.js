@@ -229,6 +229,8 @@ function points(btn) {
     scoredthree = false;
     var dart = 1;
 
+    console.log("Round: ");
+    console.log("Round: " + round);
     console.log(currentplayer.score[round][0] + " " + typeof currentplayer.score[round][0]);
     console.log(currentplayer.score[round][1] + " " + typeof currentplayer.score[round][1]);
     console.log(currentplayer.score[round][2] + " " + typeof currentplayer.score[round][2]);
@@ -242,6 +244,7 @@ function points(btn) {
     } else if (typeof currentplayer.score[round][2] == 'undefined') {
         currentplayer.score[round][2] = parseInt(totalscore);
         dart = 3;
+        scoredthree = true;
     }
 
     currentplayer.points -= totalscore;
@@ -263,7 +266,6 @@ function points(btn) {
             case 3:
                 $("#dart3").html(totalscore);
                 $("#newsticker").html("Newsticker: " + currentplayer.name + " wirft " + totalscore + " Punkte mit dem dritten Dart!");
-                scoredthree = true;
                 break;
         }
 
@@ -323,7 +325,7 @@ function points(btn) {
 
     resetMultiplier();
 
-    checkFinished();
+    checkFinished(scoredthree);
 
 }
 
