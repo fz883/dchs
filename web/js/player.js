@@ -92,23 +92,19 @@ $("#neuerSpieler").click(function (e) {
     } else {
         person.status = 'inaktiv';
         person.points = gamemode;
-        createPlayer();
+        $.when(createPlayer()).done(function (data){
+            reload();
+        });
     }
 });
 
 function createPlayer() {
-    $.ajax({
+    return $.ajax({
         type: "POST",
         url: "/api/player",
         data: JSON.stringify(person),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (result) {
-            var returnedData = result;
-            createPlayerButton(returnedData.id, returnedData.name);
-            playercount += 1;
-            checkPlayerCount()
-        },
         error: function (result) {
             alert('Spieler konnte nicht angelegt werden.');
         }

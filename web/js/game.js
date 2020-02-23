@@ -47,7 +47,7 @@ var triple = 1;
 var round = 0;
 
 var currentplayer;
-var allplayers;
+var allPlayers;
 
 
 function doubleActive() {
@@ -76,7 +76,7 @@ function tripleActive() {
 
 function updateList(playerid) {
     $.each(allPlayers, function (index) {
-        if (allPlayers[index].id != playerid) {
+        if (allPlayers[index].id != playerid && allPlayers[index].active == true && allPlayers[index].finished != true) {
             order = allPlayers[index].order;
             score = allPlayers[index].score;
             //score is null in the beginning of a game
@@ -193,8 +193,12 @@ function displayPoints(order, points, avg) {
             duration: 300,
             easing: 'swing',
             step: function () {
-                $this.text(Math.round(this.Counter));
-            }
+                $this.text(Number.parseInt(this.Counter));
+            },
+            //bugfix to make sure number is correct
+            done: function () {
+                $this.text(Number.parseInt(this.Counter));
+            } 
         });
     });
     $('#punktzahl').html(points);
@@ -273,6 +277,12 @@ function points(btn) {
         if (currentplayer.points == 0) {
             currentplayer.finished = true;
             scoredthree = true;
+            //Display points because finished players are ignored in updatelist()
+            $("#" + currentplayer.order + "-points").html(currentplayer.points);
+            $("#" + currentplayer.order + "-score-1").html(currentplayer.score[round][0]);
+            $("#" + currentplayer.order + "-score-2").html(currentplayer.score[round][1]);
+            $("#" + currentplayer.order + "-score-3").html(currentplayer.score[round][2]);
+
         }
 
     } else { //if ((person.points - totalscore) <= 1) && double == 1
