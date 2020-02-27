@@ -198,7 +198,7 @@ function displayPoints(order, points, avg) {
             //bugfix to make sure number is correct
             done: function () {
                 $this.text(Number.parseInt(this.Counter));
-            } 
+            }
         });
     });
     $('#punktzahl').html(points);
@@ -211,15 +211,29 @@ function displayPoints(order, points, avg) {
 
 
 function oopsImadeAmistake() {
-    if (person.score3 != '') {
-        person.points = person.points + person.score3;
-        person.score3 = '';
-    } else if (person.score2 != '') {
-        person.points = person.points + person.score2;
-        person.score2 = '';
-    } else if (person.score1 != '') {
-        person.points = person.points + person.score1;
-        person.score1 = '';
+    if (typeof currentplayer.score[round][0] == 'undefined') {
+        //load different player
+    } else if (typeof currentplayer.score[round][2] != 'undefined') {
+        currentplayer.points += currentplayer.score[round][2];
+        currentplayer.score[round][2] = undefined;
+        currentplayer.tries -= 1;
+        currentplayer.avg = calcAvg();
+        $("#dart3").html("-");
+        displayPoints(currentplayer.order, currentplayer.points, currentplayer.avg);
+    } else if (typeof currentplayer.score[round][1] != 'undefined') {
+        currentplayer.points += currentplayer.score[round][1];
+        currentplayer.score[round][1] = undefined;
+        currentplayer.tries -= 1;
+        currentplayer.avg = calcAvg();
+        $("#dart2").html("-");
+        displayPoints(currentplayer.order, currentplayer.points, currentplayer.avg);
+    } else if (typeof currentplayer.score[round][0] != 'undefined') {
+        currentplayer.points += currentplayer.score[round][0];
+        currentplayer.score[round][0] = undefined;
+        currentplayer.tries -= 1;
+        currentplayer.avg = calcAvg();
+        $("#dart1").html("-");
+        displayPoints(currentplayer.order, currentplayer.points, currentplayer.avg);
     }
 }
 

@@ -17,7 +17,7 @@ type Player struct {
 	Score    [][3]int `json:"score"`
 	Average  float64  `json:"avg"`
 	Order    int      `json:"order"`
-	Tries    int      `json:"tries"` //ToDo: Wahrscheinlich nicht benutzt
+	Tries    int      `json:"tries"`
 }
 
 /*type GameData struct {
