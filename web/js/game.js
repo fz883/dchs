@@ -196,6 +196,7 @@ function displayPoints(order, points, avg) {
                 $this.text(Number.parseInt(this.Counter));
             },
             //bugfix to make sure number is correct
+            //https://stackoverflow.com/questions/30095171/jquery-animate-doesnt-finish-animating
             done: function () {
                 $this.text(Number.parseInt(this.Counter));
             }
@@ -211,9 +212,11 @@ function displayPoints(order, points, avg) {
 
 
 function oopsImadeAmistake() {
-    if (typeof currentplayer.score[round][0] == 'undefined') {
-        //load different player
-    } else if (typeof currentplayer.score[round][2] != 'undefined') {
+    //do nothing if start reached
+    if (round == 0 && index == 0 && typeof currentplayer.score[round][0] == 'undefined'){
+        return;
+    }
+    if (typeof currentplayer.score[round][2] != 'undefined') {
         currentplayer.points += currentplayer.score[round][2];
         currentplayer.score[round][2] = undefined;
         currentplayer.tries -= 1;
@@ -234,6 +237,20 @@ function oopsImadeAmistake() {
         currentplayer.avg = calcAvg();
         $("#dart1").html("-");
         displayPoints(currentplayer.order, currentplayer.points, currentplayer.avg);
+    } else if (typeof currentplayer.score[round][0] == 'undefined') {
+        var roundElements = [];
+        roundElements = currentplayer.score;
+        var popped = roundElements.pop();
+        console.log(popped);
+        console.log(round);
+        currentplayer.score = roundElements;
+        sendUpdate();
+        index -= 1;
+        if (index < 0) {
+            index = playercount - 1;
+            round -= 1;
+        }
+        next(playerlist[index]);
     }
 }
 
@@ -247,7 +264,6 @@ function points(btn) {
     scoredthree = false;
     var dart = 1;
 
-    console.log("Round: ");
     console.log("Round: " + round);
     console.log(currentplayer.score[round][0] + " " + typeof currentplayer.score[round][0]);
     console.log(currentplayer.score[round][1] + " " + typeof currentplayer.score[round][1]);
@@ -335,14 +351,8 @@ function points(btn) {
 
     currentplayer.avg = calcAvg();
 
-    var postUrl = "/api/update";
-    $.ajax({
-        type: "POST",
-        url: postUrl,
-        data: JSON.stringify(currentplayer),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-    })
+    sendUpdate();
+
     if (!scoredthree) {
         displayPoints(currentplayer.order, currentplayer.points, currentplayer.avg);
     }
@@ -351,6 +361,17 @@ function points(btn) {
 
     checkFinished(scoredthree);
 
+}
+
+function sendUpdate(){
+    var postUrl = "/api/update";
+    $.ajax({
+        type: "POST",
+        url: postUrl,
+        data: JSON.stringify(currentplayer),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+    })
 }
 
 function checkFinished(scoredthree) {
